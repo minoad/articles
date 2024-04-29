@@ -1,0 +1,1 @@
+# Bash & ZSH style guide
