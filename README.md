@@ -31,6 +31,7 @@ Articles I have written arranged by segment.
 - [ ] [Python development using devcontainers and editable pip](articles/languages/python/python_development_in_devcontainer_editable_pip/python_development_in_devcontainer_editable_pip.md)
 - [ ] [Python Protocols](articles/languages/python/python_protocols/README.md)
 - [ ] [Finding all data referenced within a csv by a specified boundary in qGis](articles/qgis/finding_all_csv_data_within_a_specified_region/README.md)
+- [ ] [Project Framework Automation using pyproject.toml and dotenv](articles/python/project_framework_automation_using_pyproject_and_dotenv/README.md)
 
 ## Notable other repos and references
 

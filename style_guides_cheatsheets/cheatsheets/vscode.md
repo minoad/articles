@@ -1,5 +1,26 @@
 # Vscode cheats and quick reference
 
+## launch.json for devcontainers supporting dotenv
+
+```json
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/dev.env"
+        }
+    ]
+}
+```
+
 ## ctrl-x|c not working with vim/nvim?
 
 Add the following to your settings.json file (shift-ctrl-p: json):
