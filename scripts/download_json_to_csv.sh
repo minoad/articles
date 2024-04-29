@@ -6,7 +6,7 @@ wget -O data.json "$url"
 
 # Check if download was successful
 if [ $? -ne 0 ]; then
-    echo "Failed to download IBM finance data."
+    echo "Failed to download data."
     exit 1
 fi
 

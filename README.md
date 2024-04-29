@@ -9,5 +9,11 @@ I am also including style guides and default project information to support quic
 
 ## Articles Completed
 
-## Articles Not Completed
+## Articles Not Yet Completed
 
+- [ ] [Kubernetes](k8s/README.md)
+- [ ] [Python Project](languages/python/README.md)
+
+## Notable other repos
+
+- [public-apis](https://github.com/minoad/public-apis)
