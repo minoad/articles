@@ -1,0 +1,81 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pulumi_article"
+version = "0.1.0"
+description = "article for pulumi"
+requires-python = ">=3.10"
+license = { file = "LICENSE.txt" }
+keywords = ["article", "pulumi"]
+authors = [{ name = "Micah Norman", email = "minoad@gmail.com" }]
+maintainers = [{ name = "Micah Norman", email = "minoad@gmail.com" }]
+dependencies = [
+  "httpx",
+  "pathlib",
+  "click",
+  "pulumi",
+  "pulumi_docker",
+  "python-dotenv",
+  "pytest-dotenv",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pylint",
+    "toml",
+    "yapf",
+    "colorama",
+    "isort",
+    "black",
+    "mypy",
+    "mypy-extensions",
+    "flake8",
+    "pytest",
+    "pytest-mock",
+    "coverage",
+    "debugpy"
+]
+
+test = ["pytest < 5.0.0", "pytest-cov[all]"]
+all = ["devcont[test, dev]"]
+
+[project.urls]
+homepage = "https://github.com/minoad/articles"
+documentation = "https://github.com/minoad/articles/pulumi_deploy_local_docker_application"
+repository = "https://github.com/minoad/articles"
+changelog = "https://github.com/minoad/articles/CHANGELOG.md"
+
+[tool.mypy]
+warn_unreachable = true
+show_error_codes = true
+show_column_numbers = true
+
+[tool.pytest.ini_options]
+# Option below requires `tests/optional.py`
+addopts = "--strict-config --strict-markers"
+
+[tool.isort]
+profile = "black"
+
+[tool.black]
+line-length = 120
+target-version = ['py312']
+include = '\.pyi?$'
+preview = true
+
+[tool.pylint.format]
+max-line-length = "120"
+
+[tool.pylint.'MESSAGES CONTROL']
+max-line-length = 120
+
+[project.scripts]
+testo = "testo.__main__:main"
+
+#[project.gui-scripts]
+#spam-gui = "testo.printo:main"
+
+#[project.entry-points."spam.magical"]
+#tomatoes = "spam:main_tomatoes"

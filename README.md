@@ -4,8 +4,16 @@ Articles I have written arranged by segment.
 
 ## Summary
 
-The k8s repo contains the deployment instructions to setup for executing and supporting the articles.
-I am also including style guides and default project information to support quick lookups.
+- setup/
+    - Contains items useful for setting up environments that will be used to write and demonstrate the content of the articles.
+- setup/Makefile
+    - Makefile that contains commands to setup the environment.
+- setup/scripts/
+    - Contains runtime helper scripts.
+- articles/
+    - Contains the articles themselves.
+- style_guides_cheatsheets/
+    - Contains cheatsheets and style guides for various tools and technologies.
 
 ## Articles Completed
 
@@ -19,6 +27,7 @@ I am also including style guides and default project information to support quic
 - [ ] [nvim](ide/nvim/README.md)
 - [ ] [vscode](ide/vscode/README.md)
 - [ ] [ldap](support_services/ldap/README.md)
+- [ ] [githooks](articles/gitops/githooks.md)
 
 ## Notable other repos
 
