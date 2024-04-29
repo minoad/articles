@@ -43,6 +43,6 @@ Articles I have written arranged by segment.
 - Data
     - [public-apis](https://github.com/minoad/public-apis)
 - Generic Programming
-    - ![Gang of 4]()
-    - ![Clean Code]()
-    - ![Uncle Bob]()
+    - [Gang of 4](https://github.com/tuvo1106/python_design_patterns)
+    - [Clean Code](https://github.com/PacktPublishing/Clean-Code-in-Python)
+    - [Uncle Bob](https://github.com/unclebob)
