@@ -29,6 +29,13 @@ Articles I have written arranged by segment.
 - [ ] [ldap](support_services/ldap/README.md)
 - [ ] [githooks](articles/gitops/githooks.md)
 
-## Notable other repos
+## Notable other repos and references
 
-- [public-apis](https://github.com/minoad/public-apis)
+- Data
+    - [public-apis](https://github.com/minoad/public-apis)
+- Go
+    - ![Arjan Codes - Youtube]()
+- Generic Programming
+    - ![Gang of 4]()
+    - ![Clean Code]()
+    - ![Uncle Bob]()

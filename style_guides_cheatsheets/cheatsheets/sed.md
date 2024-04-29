@@ -3,7 +3,7 @@
 ## Command structure
 
 d = delete; p = print; -n suppresses output; s = substitute; -r (-E on mac) turns on Extended Regular Expressions; \1 to \n Capture groups;
-multiple commands using '<command>; <command>' or -e 'command' -e 'command'
+multiple commands using `<command>; <command>` or -e `'command' -e 'command'
 & means 'pattern found' and can be used as a variable.
 
 - Standard replace
