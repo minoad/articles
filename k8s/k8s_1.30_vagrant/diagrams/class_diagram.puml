@@ -1,0 +1,32 @@
+@startuml
+title Kubernetes Deployment on Ubuntu 22.04 with Vagrant and Calico
+
+
+class "Physical Host" as Ubuntu {
+    
+}
+
+class "Vagrant" as Vagrant {
+    }
+
+class "Bridged Network\n10.0.0.0/8" as Network {
+}
+
+class "K8sMaster Node" as Master {
+}
+
+class "K8sWorker Node 1" as Worker1 {
+}
+
+class "K8sWorker Node 2" as Worker2 {
+}
+
+class "Kubernetes 1.30\n(kubeadm)" as Kubernetes {
+}
+
+class "Calico CNI" as Calico {
+}
+
+
+
+@enduml

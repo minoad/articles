@@ -1,0 +1,110 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.provider :virtualbox do |v|
+    v.memory = 2048
+    v.cpus = 2
+  end
+
+  # Set Constants
+  private_ip_network = "192.168.1.0/24"
+  private_ip_prefix = "192.168.1."
+  master_host_name = "k8smaster"
+
+  ## TODO: I need to decide if i want to keep these directives here or move them to the startup script.
+  ## If used as a tutorial, it may be better to keep them here.
+
+  # Create any required default directories for all nodes
+  config.vm.provision :shell, :privileged => true, :inline => "mkdir -m 0755 -p /etc/apt/keyrings/"
+  config.vm.provision :shell, :privileged => true, :inline => "mkdir /etc/containerd"
+
+  # Copy required configs.  Usually a copy to tmp and associated privileged mv to the correct location
+  ## Set hosts
+  config.vm.provision "file", source: "configs/etc_hosts", destination: "/tmp/hosts"
+  config.vm.provision :shell, :inline => "rm -f /etc/hosts && mv /tmp/hosts /etc/hosts", :privileged => true
+  
+  ## Set containerd config
+  config.vm.provision "file", source: "configs/containerd_config.toml", destination: "/tmp/containerd_config.toml"
+  config.vm.provision :shell, :inline => "mv /tmp/containerd_config.toml /etc/containerd/config.toml", :privileged => true
+
+  # Prepare nodes
+  config.vm.provision "file", source: "scripts/kube_node_setup.sh", destination: "/tmp/kube_node_setup.sh"
+  config.vm.provision :shell, :inline => "/tmp/kube_node_setup.sh", :privileged => true
+
+  # Add some default troubleshooting
+  config.vm.provision "file", source: "scripts/troubleshoot.sh", destination: "/tmp/troubleshoot.sh"
+  config.vm.provision :shell, :inline => "mv /tmp/troubleshoot.sh /usr/local/bin/troubleshoot.sh", :privileged => true
+
+  # Deploy and setup the master node
+  config.vm.define :k8smaster do |k8smaster|
+    private_ip = "#{private_ip_prefix}10"
+    k8smaster.vm.box = "ubuntu/jammy64"
+    k8smaster.vm.hostname = "#{master_host_name}"
+    k8smaster.vm.network "public_network", bridge: "enp4s0", ip: "#{private_ip}"
+
+    # Prepare master
+    k8smaster.vm.provision "file", source: "scripts/kube_master_setup.sh", destination: "/tmp/kube_master_setup.sh"
+    k8smaster.vm.provision :shell, :inline => "/tmp/kube_master_setup.sh", :privileged => true
+
+    # Setup Kubernetes
+    k8smaster.vm.provision :file, :source => "configs/kubeadm_config.yaml", :destination => "/tmp/kubeadm_config.yaml"
+    k8smaster.vm.provision :shell, :inline => "kubeadm config images pull", :privileged => true  
+    k8smaster.vm.provision :shell, :inline => "kubeadm init --config /tmp/kubeadm_config.yaml 2>&1 | tee /tmp/kubeadm_out.txt", :privileged => true  
+    
+    # setup kubectl
+    k8smaster.vm.provision :shell, :inline => "mkdir -p $HOME/.kube && cp -i /etc/kubernetes/admin.conf $HOME/.kube/config && chown $(id -u):$(id -g) $HOME/.kube/config", :privileged => true
+    k8smaster.vm.provision :shell, :inline => "cat $HOME/.kube/config > /vagrant/kube_config", :privileged => true
+    k8smaster.vm.provision :shell, :inline => "mkdir -p /home/vagrant/.kube && cp /vagrant/kube_config /home/vagrant/.kube/config", :privileged => true
+
+    # Distribute the join command
+    k8smaster.vm.provision :shell, :inline => "cat /tmp/kubeadm_out.txt | tail -n 2 > /vagrant/join.sh", :privileged => true
+
+    # Calico deploy
+    k8smaster.vm.provision :shell, :inline => "kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.3/manifests/tigera-operator.yaml", :privileged => true
+    k8smaster.vm.provision :shell, :inline => "wget https://raw.githubusercontent.com/projectcalico/calico/v3.27.3/manifests/custom-resources.yaml", :privileged => true
+    k8smaster.vm.provision :shell, :inline => "sed -i 's|cidr: 192.168.0.0/16|cidr: 172.16.0.0/12|g' custom-resources.yaml", :privileged => true
+    k8smaster.vm.provision :shell, :inline => "kubectl create -f custom-resources.yaml", :privileged => true
+  
+    # Remove Taints
+    ## kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+    ## kubectl taint nodes --all node-role.kubernetes.io/master-
+  end
+
+  %w{k8snode01 k8snode02}.each_with_index do |name, i|
+    config.vm.define name do |worker|
+      worker.vm.box = "ubuntu/jammy64"
+      worker.vm.hostname = name
+      worker.vm.network "public_network", bridge: "enp4s0", ip: "#{private_ip_prefix}#{i + 11}"
+      worker.vm.provision :shell, :inline => "mkdir -p $HOME/.kube/ && cp /vagrant/kube_config $HOME/.kube/config", :privileged => true 
+      worker.vm.provision :shell, :inline => "mkdir -p /home/vagrant/.kube/ && cp /vagrant/kube_config /home/vagrant/.kube/config", :privileged => true 
+      worker.vm.provision :shell, :inline => "bash /vagrant/join.sh", :privileged => true
+    end
+  end
+end
+
+
+#### BEGIN PROVISIONING PRIMARY NODE####
+$provision_master_node = <<-SHELL
+## experiment here
+# sed -i "s|advertiseAddress: 1.2.3.4|advertiseAddress: 192.168.1.10|g" kubeadm_config.yaml
+# sed -i "s|scheduler: {}|  podSubnet: "10.244.0.0/16"|g" kubeadm_config.yaml
+# sed -i "s|scheduler: {}|  podSubnet: "192.168.1.0/24"|g" kubeadm_config.yaml
+# sed -i "s|scheduler: {}|  serviceSubnet: "10.96.0.0/12"|g" kubeadm_config.yaml
+
+# echo "scheduler: {}" >> kubeadm_config.yaml
+# echo "kind: KubeletConfiguration" >> kubeadm_config.yaml
+# echo "apiVersion: kubelet.config.k8s.io/v1beta1" >> kubeadm_config.yaml
+# echo "cgroupDriver: systemd" >> kubeadm_config.yaml
+#sudo kubeadm init --config kubeadm_config.yaml | tee kube_init_results.txt # --apiserver-advertise-address=10.0.0.10 --pod-network-cidr=10.0.3.0/24 | tee ~/kube_init.txt # --apiserver-advertise-address=10.0.0.10 --pod-network-cidr=10.244.0.0/16 | grep "kubeadm join" | tee /vagrant/join.sh
+
+# mkdir -p $HOME/.kube && sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config && sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+wget https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+kubectl apply -f kube-flannel.yml
+sleep 15
+sudo systemctl restart containerd
+kubectl get nodes -o jsonpath='{.items[*].spec.podCIDR}'
+cat /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+
+SHELL

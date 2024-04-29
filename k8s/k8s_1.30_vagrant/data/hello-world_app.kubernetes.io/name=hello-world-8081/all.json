@@ -1,0 +1,353 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "cni.projectcalico.org/containerID": "cdcaedb9f5166feadfbacc21a40a9c472c4d2a2af5e14edc3cc7be59b4037ae9",
+                    "cni.projectcalico.org/podIP": "172.23.23.196/32",
+                    "cni.projectcalico.org/podIPs": "172.23.23.196/32"
+                },
+                "creationTimestamp": "2024-04-29T05:39:39Z",
+                "generateName": "hello-world-8081-5c4cfb6b47-",
+                "labels": {
+                    "app": "hello-world-8081",
+                    "app.kubernetes.io/name": "hello-world-8081",
+                    "pod-template-hash": "5c4cfb6b47",
+                    "tier": "dev"
+                },
+                "name": "hello-world-8081-5c4cfb6b47-qpldl",
+                "namespace": "hello-world",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "ReplicaSet",
+                        "name": "hello-world-8081-5c4cfb6b47",
+                        "uid": "4bc796e5-4907-4583-908d-6d3e7fb06fc8"
+                    }
+                ],
+                "resourceVersion": "23886",
+                "uid": "a6d15e8a-3c07-4a4e-b00d-90608087d54a"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "args": [
+                            "netexec",
+                            "--http-port=8081"
+                        ],
+                        "image": "registry.k8s.io/e2e-test-images/agnhost:2.39",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "hello-world-8081",
+                        "resources": {},
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-9qg2j",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "k8snode01",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "kube-api-access-9qg2j",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2024-04-29T05:39:40Z",
+                        "status": "True",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2024-04-29T05:39:38Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2024-04-29T05:39:40Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2024-04-29T05:39:40Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2024-04-29T05:39:39Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "containerID": "containerd://d77c0a4e5e372ad2b27594b53c2dd9b7d0458e8a1cb5e1caf4e038a6e6dd023f",
+                        "image": "registry.k8s.io/e2e-test-images/agnhost:2.39",
+                        "imageID": "registry.k8s.io/e2e-test-images/agnhost@sha256:7e8bdd271312fd25fc5ff5a8f04727be84044eb3d7d8d03611972a6752e2e11e",
+                        "lastState": {},
+                        "name": "hello-world-8081",
+                        "ready": true,
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2024-04-29T05:39:39Z"
+                            }
+                        }
+                    }
+                ],
+                "hostIP": "192.168.1.11",
+                "hostIPs": [
+                    {
+                        "ip": "192.168.1.11"
+                    }
+                ],
+                "phase": "Running",
+                "podIP": "172.23.23.196",
+                "podIPs": [
+                    {
+                        "ip": "172.23.23.196"
+                    }
+                ],
+                "qosClass": "BestEffort",
+                "startTime": "2024-04-29T05:39:38Z"
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "ReplicaSet",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/desired-replicas": "1",
+                    "deployment.kubernetes.io/max-replicas": "2",
+                    "deployment.kubernetes.io/revision": "3"
+                },
+                "creationTimestamp": "2024-04-29T05:39:39Z",
+                "generation": 1,
+                "labels": {
+                    "app": "hello-world-8081",
+                    "app.kubernetes.io/name": "hello-world-8081",
+                    "pod-template-hash": "5c4cfb6b47",
+                    "tier": "dev"
+                },
+                "name": "hello-world-8081-5c4cfb6b47",
+                "namespace": "hello-world",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Deployment",
+                        "name": "hello-world-8081",
+                        "uid": "27a7c94d-01c0-43af-a64b-827bdd3cac43"
+                    }
+                ],
+                "resourceVersion": "23889",
+                "uid": "4bc796e5-4907-4583-908d-6d3e7fb06fc8"
+            },
+            "spec": {
+                "replicas": 1,
+                "selector": {
+                    "matchLabels": {
+                        "app": "hello-world-8081",
+                        "pod-template-hash": "5c4cfb6b47"
+                    }
+                },
+                "template": {
+                    "metadata": {
+                        "creationTimestamp": null,
+                        "labels": {
+                            "app": "hello-world-8081",
+                            "app.kubernetes.io/name": "hello-world-8081",
+                            "pod-template-hash": "5c4cfb6b47",
+                            "tier": "dev"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "args": [
+                                    "netexec",
+                                    "--http-port=8081"
+                                ],
+                                "image": "registry.k8s.io/e2e-test-images/agnhost:2.39",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "hello-world-8081",
+                                "resources": {},
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File"
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {},
+                        "terminationGracePeriodSeconds": 30
+                    }
+                }
+            },
+            "status": {
+                "availableReplicas": 1,
+                "fullyLabeledReplicas": 1,
+                "observedGeneration": 1,
+                "readyReplicas": 1,
+                "replicas": 1
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "ReplicaSet",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/desired-replicas": "1",
+                    "deployment.kubernetes.io/max-replicas": "2",
+                    "deployment.kubernetes.io/revision": "2"
+                },
+                "creationTimestamp": "2024-04-29T05:02:28Z",
+                "generation": 2,
+                "labels": {
+                    "app": "hello-world-8081",
+                    "app.kubernetes.io/name": "hello-world-8081",
+                    "pod-template-hash": "7b67586454"
+                },
+                "name": "hello-world-8081-7b67586454",
+                "namespace": "hello-world",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "Deployment",
+                        "name": "hello-world-8081",
+                        "uid": "27a7c94d-01c0-43af-a64b-827bdd3cac43"
+                    }
+                ],
+                "resourceVersion": "23899",
+                "uid": "5aef6000-01c1-4aed-b66d-a0d65c67cd7c"
+            },
+            "spec": {
+                "replicas": 0,
+                "selector": {
+                    "matchLabels": {
+                        "app": "hello-world-8081",
+                        "pod-template-hash": "7b67586454"
+                    }
+                },
+                "template": {
+                    "metadata": {
+                        "creationTimestamp": null,
+                        "labels": {
+                            "app": "hello-world-8081",
+                            "app.kubernetes.io/name": "hello-world-8081",
+                            "pod-template-hash": "7b67586454"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "args": [
+                                    "netexec",
+                                    "--http-port=8081"
+                                ],
+                                "image": "registry.k8s.io/e2e-test-images/agnhost:2.39",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "hello-world-8081",
+                                "resources": {},
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File"
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {},
+                        "terminationGracePeriodSeconds": 30
+                    }
+                }
+            },
+            "status": {
+                "observedGeneration": 2,
+                "replicas": 0
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}

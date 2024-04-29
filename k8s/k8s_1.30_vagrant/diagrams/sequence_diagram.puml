@@ -1,0 +1,37 @@
+@startuml
+title Kubernetes Deployment on Ubuntu 22.04 with Vagrant and Calico
+
+actor User
+
+box "Physical Machine"
+    participant "Ubuntu 22.04" as Ubuntu
+    participant "Vagrant" as Vagrant
+    participant "Bridged Network\n10.0.0.0/8" as Network
+end box
+
+box "Vagrant VMs"
+    participant "K8sMaster Node" as Master
+    participant "K8sWorker Node 1" as Worker1
+    participant "K8sWorker Node 2" as Worker2
+end box
+
+box "Kubernetes Cluster"
+    participant "Kubernetes 1.30\n(kubeadm)" as Kubernetes
+    participant "Calico CNI" as Calico
+end box
+
+User -> Ubuntu : Install Ubuntu 22.04
+User -> Vagrant : Install Vagrant
+User -> Network : Configure Bridged Network\n10.0.0.0/8
+
+Vagrant -> Master : Deploy K8sMaster Node
+Vagrant -> Worker1 : Deploy K8sWorker Node 1
+Vagrant -> Worker2 : Deploy K8sWorker Node 2
+
+Master -> Kubernetes : Deploy Kubernetes using kubeadm
+Worker1 -> Kubernetes : Join Kubernetes Cluster
+Worker2 -> Kubernetes : Join Kubernetes Cluster
+
+Kubernetes -> Calico : Configure Calico as CNI
+
+@enduml

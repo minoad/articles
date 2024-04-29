@@ -1,0 +1,10 @@
+name: article
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: support of pulumi article
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: python
