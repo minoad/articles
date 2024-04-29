@@ -28,6 +28,8 @@ Articles I have written arranged by segment.
 - [ ] [vscode](ide/vscode/README.md)
 - [ ] [ldap](support_services/ldap/README.md)
 - [ ] [githooks](articles/gitops/githooks.md)
+- [ ] [Python development using devcontainers and editable pip](articles/languages/python/python_development_in_devcontainer_editable_pip/python_development_in_devcontainer_editable_pip.md)
+- [ ] [Python Protocols](articles/languages/python/python_protocols/README.md)
 
 ## Notable other repos and references
 
