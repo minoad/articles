@@ -14,7 +14,7 @@ The reader is expected to have Ubuntu 22.04 installed on a physical machine, Vag
 - Ubuntu 22.04 installed on a physical machine
 - Vagrant installed on the physical machine
 - Bridged network configured on the physical machine
-    - `/etc/vbox/networks.conf` should have the following line: `* 10.0.0.0/8`
+    - `/etc/vbox/networks.conf` should have the following line: `* 11.0.0.0/8`
 
 ## Setting up the Physical Server
 
