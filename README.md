@@ -20,9 +20,14 @@ Articles I have written arranged by segment.
 - [ ] [Pulumi](iac/pulumi_deploy_local_docker_application/article.md)
 - [ ] [Terraform and Terragrunt Tutorial](iac/terraform_terragrunt_tutorial/README.md)
 
-## Articles Not Yet Completed
+## Articles In Progress
 
 - [ ] [Kubernetes local deployment using Vagrant and Calico](k8s/k8s_1.30_vagrant/README.md)
+  - [ ] [Prepare the physical host](articles/k8s/k8s_1.30_vagrant_deployment_calico/1_prep_phys_host_for_k8s1.30_vagrant_calico.md)
+  - [ ] [Install Kubernetes](articles/k8s/k8s_1.30_vagrant_deployment_calico/2_k8s_1.30_vagrant_deployment.md)
+
+## Articles Not Yet Completed
+
 - [ ] [Python Project Lifecycle](languages/python/python_project_lifecycle/README.md)
 - [ ] [nvim](ide/nvim/README.md)
 - [ ] [vscode](ide/vscode/README.md)
