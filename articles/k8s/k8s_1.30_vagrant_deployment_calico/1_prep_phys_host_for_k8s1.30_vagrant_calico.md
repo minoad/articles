@@ -1,5 +1,11 @@
 # Prepare Physical Host for Kubernetes 1.30 Vagrant Deployment with Calico
 
+## Introduction
+
+Setting up the physical host for deploying a virtual Kubernetes 1.30 cluster is a crucial step in building a robust and supported environment. By following these steps, you'll ensure that your server is properly configured to support and deploy the required virtual servers and networks.
+
+## Installation
+
 1. **Install Ubuntu 22.04 on your server:**
     - Download the Ubuntu 22.04 server ISO from the official Ubuntu website.
     - Burn the ISO to a bootable media (USB or DVD).

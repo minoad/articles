@@ -19,6 +19,7 @@ Articles I have written arranged by segment.
 
 - [ ] [Pulumi](iac/pulumi_deploy_local_docker_application/article.md)
 - [ ] [Terraform and Terragrunt Tutorial](iac/terraform_terragrunt_tutorial/README.md)
+    - [published at](https://minoad.hashnode.dev/exploring-terraform-and-terragrunt-on-windows-with-docker-and-wsl2)
 
 ## Articles In Progress
 
