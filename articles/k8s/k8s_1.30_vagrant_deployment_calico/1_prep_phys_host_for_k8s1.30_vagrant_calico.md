@@ -4,6 +4,8 @@
 
 Setting up the physical host for deploying a virtual Kubernetes 1.30 cluster is a crucial step in building a robust and supported environment. By following these steps, you'll ensure that your server is properly configured to support and deploy the required virtual servers and networks.
 
+![layout diagram](images/physical_host.png)
+
 ## Installation
 
 1. **Install Ubuntu 22.04 on your server:**

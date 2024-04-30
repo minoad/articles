@@ -1,0 +1,43 @@
+@startuml
+
+node "Physical Host" {
+    folder "VirtualBox" {
+        rectangle "Vagrant" as vagrant
+    }
+    
+    rectangle "K8sMaster" as k8smaster
+    rectangle "K8sWorker1" as k8sworker1
+    rectangle "K8sWorker2" as k8sworker2
+
+    vagrant --> k8smaster
+    vagrant --> k8sworker1
+    vagrant --> k8sworker2
+    
+    folder "Network" {
+        rectangle "NAT Network" as nat
+        rectangle "Bridged Network" as bridge
+    }
+    
+    bridge --> k8smaster
+    bridge --> k8sworker1
+    bridge --> k8sworker2
+}
+
+node "Kubernetes Cluster" {
+    folder "Pod Network" {
+        rectangle "Calico" as calico
+    }
+    
+    folder "Service Network" {
+        rectangle "Kube-Proxy" as kubeproxy
+    }
+    
+    k8smaster --> calico
+    k8smaster --> kubeproxy
+    k8sworker1 --> calico
+    k8sworker1 --> kubeproxy
+    k8sworker2 --> calico
+    k8sworker2 --> kubeproxy
+}
+
+@enduml
