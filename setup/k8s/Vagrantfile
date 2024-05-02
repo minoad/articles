@@ -36,30 +36,66 @@ Vagrant.configure("2") do |config|
         k8smaster.vm.provision "run kube_master setup", type: "shell", path: "#{SCRIPTS_DIR}/kube_master_setup.sh", :privileged => true
 
         ## Prep the configuration files for master deployment
-        k8smaster.vm.provision :file, :source => "#{CONFIGS_DIR}/master.env", :destination => "/tmp/master.env"
-        k8smaster.vm.provision :file, :source => "#{CONFIGS_DIR}/kubeadm_config_templ.yaml", :destination => "/tmp/kubeadm_config_templ.yaml"
-        k8smaster.vm.provision "create master init file", type: "shell", :inline => "source /tmp/master.env && envsubst < /tmp/kubeadm_config_templ.yaml > /tmp/kubeadm_config.yaml", :privileged => true
+        k8smaster.vm.provision :file,
+          :source => "#{CONFIGS_DIR}/master.env",
+          :destination => "/tmp/master.env"
+        k8smaster.vm.provision :file,
+          :source => "#{CONFIGS_DIR}/kubeadm_config_templ.yaml",
+          :destination => "/tmp/kubeadm_config_templ.yaml"
+        k8smaster.vm.provision "create master init file",
+          type: "shell",
+          :inline => "source /tmp/master.env && envsubst < /tmp/kubeadm_config_templ.yaml > /tmp/kubeadm_config.yaml",
+          :privileged => true
 
         # Setup Kubernetes
-        k8smaster.vm.provision "pull kubeadmin images", type: "shell", :inline => "kubeadm config images pull", :privileged => true
-        k8smaster.vm.provision "execute kubeadmin init", type: "shell", :inline => "kubeadm init --config /tmp/kubeadm_config.yaml 2>&1 | tee /tmp/kubeadm_out.txt", :privileged => true
+        k8smaster.vm.provision "pull kubeadmin images",
+          type: "shell",
+          :inline => "kubeadm config images pull",
+          :privileged => true
+        k8smaster.vm.provision "execute kubeadmin init",
+          type: "shell",
+          :inline => "kubeadm init --config /tmp/kubeadm_config.yaml 2>&1 | tee /tmp/kubeadm_out.txt",
+          :privileged => true
 
         # setup kubectl
-        k8smaster.vm.provision "setup kubectl config", type: "shell", :inline => "mkdir -p $HOME/.kube && cp -i /etc/kubernetes/admin.conf $HOME/.kube/config && chown $(id -u):$(id -g) $HOME/.kube/config", :privileged => true
-        k8smaster.vm.provision "move kubectl config to vagrant shared directory", type: "shell", :inline => "cat $HOME/.kube/config > /vagrant/kube_config", :privileged => true
-        k8smaster.vm.provision "token value to shared dir", type: "shell", :inline => "grep 'token:' /tmp/kubeadm_out.txt | awk '{print $4}' > /vagrant/token.env", :privileged => true
-        k8smaster.vm.provision "cert value to shared dir", type: "shell", :inline => "grep 'discovery-token-ca-cert-hash' /tmp/kubeadm_out.txt | awk '{print $2}' > /vagrant/discovery_token_ca_cert.env", :privileged => true
-        k8smaster.vm.provision "move kubectl config to additional users", type: "shell", :inline => "mkdir -p /home/vagrant/.kube && cp /vagrant/kube_config /home/vagrant/.kube/config", :privileged => true
-
-        # Distribute the join command
-        # puts "Distribute the join command"
-        # k8smaster.vm.provision "distribute the kube cluster join command to the vagrant shared directory", type: "shell", :inline => "cat /tmp/kubeadm_out.txt | tail -n 2 > /vagrant/join.sh && chmod +x /vagrant/join.sh", :privileged => true
+        k8smaster.vm.provision "setup kubectl config",
+          type: "shell",
+          :inline => "mkdir -p $HOME/.kube && cp -i /etc/kubernetes/admin.conf $HOME/.kube/config && chown $(id -u):$(id -g) $HOME/.kube/config",
+          :privileged => true
+        k8smaster.vm.provision "move kubectl config to vagrant shared directory",
+          type: "shell",
+          :inline => "cat $HOME/.kube/config > /vagrant/kube_config",
+          :privileged => true
+        k8smaster.vm.provision "token value to shared dir",
+          type: "shell",
+          :inline => "grep 'token:' /tmp/kubeadm_out.txt | awk '{print $4}' > /vagrant/token.env",
+          :privileged => true
+        k8smaster.vm.provision "cert value to shared dir",
+          type: "shell",
+          :inline => "grep 'discovery-token-ca-cert-hash' /tmp/kubeadm_out.txt | awk '{print $2}' > /vagrant/discovery_token_ca_cert.env",
+          :privileged => true
+        k8smaster.vm.provision "move kubectl config to additional users",
+          type: "shell",
+          :inline => "mkdir -p /home/vagrant/.kube && cp /vagrant/kube_config /home/vagrant/.kube/config",
+          :privileged => true
 
         # Calico deploy
-        k8smaster.vm.provision "get calico operators", type: "shell", :inline => "kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.3/manifests/tigera-operator.yaml", :privileged => true
-        k8smaster.vm.provision "get calico resources", type: "shell", :inline => "wget https://raw.githubusercontent.com/projectcalico/calico/v3.27.3/manifests/custom-resources.yaml", :privileged => true
-        k8smaster.vm.provision "prepare calico config file", type: "shell", :inline => "sed -i 's|cidr: 192.168.0.0/16|cidr: 172.16.0.0/12|g' custom-resources.yaml", :privileged => true
-        k8smaster.vm.provision "execute the calico command", type: "shell", :inline => "kubectl create -f custom-resources.yaml", :privileged => true
+        k8smaster.vm.provision "get calico operators",
+          type: "shell",
+          :inline => "kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.3/manifests/tigera-operator.yaml",
+          :privileged => true
+        k8smaster.vm.provision "get calico resources",
+          type: "shell",
+          :inline => "wget https://raw.githubusercontent.com/projectcalico/calico/v3.27.3/manifests/custom-resources.yaml",
+          :privileged => true
+        k8smaster.vm.provision "prepare calico config file",
+          type: "shell",
+          :inline => "sed -i 's|cidr: 192.168.0.0/16|cidr: 172.16.0.0/12|g' custom-resources.yaml",
+          :privileged => true
+        k8smaster.vm.provision "execute the calico command",
+          type: "shell",
+          :inline => "kubectl create -f custom-resources.yaml",
+          :privileged => true
         # todo: this should use apply not create
 
         # Remove Taints
