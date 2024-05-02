@@ -9,7 +9,7 @@ bootstrapTokens:
   - authentication
 kind: InitConfiguration
 localAPIEndpoint:
-  advertiseAddress: 192.168.1.10
+  advertiseAddress: ${INTERNAL_IP}
   bindPort: 6443
 nodeRegistration:
   criSocket: unix:///var/run/containerd/containerd.sock
@@ -32,12 +32,12 @@ kind: ClusterConfiguration
 kubernetesVersion: 1.30.0
 networking:
   dnsDomain: cluster.local
-  podSubnet: 172.16.0.0/12
-  serviceSubnet: 10.96.0.0/12
+  podSubnet: ${api_server_pod_subnet}
+  serviceSubnet: ${api_server_serviceSubnet}
 scheduler: {}
 ---
 apiVersion: kubeproxy.config.k8s.io/v1alpha1
-bindAddress: 0.0.0.0
+bindAddress: ${kube_proxy_bindAddress}
 bindAddressHardFail: false
 clientConnection:
   acceptContentTypes: ""
@@ -45,7 +45,7 @@ clientConnection:
   contentType: ""
   kubeconfig: /var/lib/kube-proxy/kubeconfig.conf
   qps: 0
-clusterCIDR: "172.16.0.0/12"
+clusterCIDR: ${kube_proxy_clusterCIDR}
 configSyncPeriod: 0s
 conntrack:
   maxPerCore: null

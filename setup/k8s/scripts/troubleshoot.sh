@@ -2,6 +2,12 @@
 
 # TODO: Copy this file to the servers and enable it for usage.
 
+function prepare_kubelet_config(){
+  ip=$(ip -4 address show enp0s8 | grep inet | tr -s ' ' | cut -d ' ' -f 3 | cut -d '/' -f 1)
+}
+# kubelet uses the IP address reported by the cloud provider if it exists, or the first non-loopback ipv4 address (code here) if there is no cloud provider. In addition, it could be overwritten by kubelet flags.
+# You might want to check if there are any differences in your nodes.
+
 function set_kube_config() {
   # @param $1: kubeconfig file
   KUBECONFIG_FILE=$1

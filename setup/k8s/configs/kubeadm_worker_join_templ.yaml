@@ -1,0 +1,11 @@
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: JoinConfiguration
+nodeRegistration:
+  kubeletExtraArgs:
+    node-ip: ${INTERNAL_IP}
+discovery:
+  bootstrapToken:
+    apiServerEndpoint: ${api_server_endpoint}
+    token: ${token}
+    caCertHashes:
+    - ${token_discovery_hash}
