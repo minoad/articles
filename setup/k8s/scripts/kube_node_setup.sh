@@ -3,29 +3,13 @@
 mkdir -p /tmp/patches
 
 rm -f /etc/hosts && mv /tmp/hosts /etc/hosts
-mkdir -p '/root/.kube/' '/home/vagrant/.kube/' '/etc/facts/'
+mkdir -p '/root/.kube/' '/home/vagrant/.kube/'
 
 echo "prepare kernel"
 tee /etc/modules-load.d/containerd.conf <<EOF
 overlay
 br_netfilter
 EOF
-
-modprobe overlay
-modprobe br_netfilter
-
-# bridged traffic to iptables is enabled for kube-router.
-cat >> /etc/ufw/sysctl.conf <<EOF
-net/bridge/bridge-nf-call-ip6tables = 1
-net/bridge/bridge-nf-call-iptables = 1
-net/bridge/bridge-nf-call-arptables = 1
-EOF
-
-## sysctl --all
-# add this to the call above?
-sysctl -w net.ipv4.ip_forward=1
-sysctl -p
-sysctl --system
 
 echo "apt install"
 # Apt install
@@ -52,10 +36,6 @@ install -m 755 runc.amd64 /usr/local/sbin/runc
 
 systemctl restart containerd
 systemctl enable containerd
-
-# lets see if facter is the best way to do this.
-gem install facter
-facter --json > /etc/facts/facts.json
 
 echo "alias k=kubectl" >> /etc/bash.bashrc
 echo "complete -F __start_kubectl k" >> /etc/bash.bashrc

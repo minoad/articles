@@ -1,0 +1,34 @@
+---
+mgmt:
+  ansible01:
+    hostname: "ansible01"
+    ip: "192.168.1.16"
+    mem: "1024"
+    cpus: "1"
+    launch_script: "scripts/all.sh"
+  consul01:
+    hostname: "consul01"
+    ip: "192.168.1.17"
+    mem: "1024"
+    cpus: "1"
+    launch_script: "scripts/all.sh"
+kubernetes_service_host:
+  k8s-service-host-00:
+    hostname: "k8s-service-host-00"
+    ip: "192.168.1.10"
+    mem: "2048"
+    cpus: "2"
+    launch_script: "scripts/all.sh"
+kubernetes_workers:
+  k8s-worker-00:
+    hostname: "k8s-worker-00"
+    ip: "192.168.1.11"
+    mem: "2048"
+    cpus: "2"
+    launch_script: "scripts/all.sh"
+  k8s-worker-01:
+    hostname: "k8s-worker-01"
+    ip: "192.168.1.12"
+    mem: "2048"
+    cpus: "2"
+    launch_script: "scripts/all.sh"

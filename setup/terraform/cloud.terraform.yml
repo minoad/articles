@@ -1,0 +1,5 @@
+---
+  - name: Basic deploy of a service
+    cloud.terraform.terraform:
+      project_path: '{{ project_dir }}'
+      state: present

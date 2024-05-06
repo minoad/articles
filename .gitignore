@@ -1,3 +1,4 @@
+kube_config
 .flake8/
 # Local .terraform directories
 **/.terraform/*
