@@ -2,16 +2,40 @@
 
 ## Introduction
 
-Recently a friend of mine was complaining about an error in their anaconda environment.  I immediatly reccomended switching to a devcontainer or a venv environment.
+Recently a friend of mine was complaining about an error in their anaconda environment.  I immediately recommended switching to a devcontainer or a venv environment.
 
 I realized that many people are not aware of the benefits of using a devcontainer or a venv environment or how to select for versions of python, etc.
 
 ## Intent
 
-My intent here is to create an article that will cover environment mangement for modern versions of python.
+My intent here is to create an article that will cover environment management for modern versions of python.
 
-The final solution will be a python 3.12 project running in either a devcontainer(prefered) and/or a venv environment.
+The final solution will be a python 3.12 project running in either a devcontainer(preferred) and/or a venv environment.
 IDE is assumed to be vscode, however the same principles apply to other IDEs.
+
+## Setup
+
+### Windows
+
+1. Install [Windows Terminal](https://aka.ms/terminal).
+1. Install [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install)
+    1. WSL can get greedy for memory.  I use the following to limit it to 5GB.  Check your task manager to see your availbe memory.  Here is my example.
+    Create the file `$HOME/.wslconfig` and add the following:
+
+    ```conf
+    [wsl2]
+    memory=5GB
+    ```
+
+1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop)
+1. Install [Visual Studio Code](https://code.visualstudio.com/)
+1. Setup openssh for windows.  This is required for the remote development extension pack.  [Instructions](https://docs.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse)
+1. Setup windows (this is if using git-bash.  I would still recommend getting openssh going as well) [ssh key for github](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
+1. Add ssh to github.  [Instructions](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)
+    1. Install [Remote Development Extension Pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack)
+    1. Install [Python Extension Pack](https://marketplace.visualstudio.com/items?itemName=donjayamanne.python-extension-pack)
+    1. Install [Remote - Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+    1. Install [Remote - WSL](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl)
 
 ## Resources
 
@@ -19,19 +43,81 @@ IDE is assumed to be vscode, however the same principles apply to other IDEs.
 
 Below are the snippets used to setup the project.
 
-I would reccomend using a template git repo, but having these aviailable will allow for quick deployment and development.
+I would recommend using a template git repo, but having these aviailable will allow for quick deployment and development.
 
-Snippets are file type dependent.  For instance, python code snippets will work in files with type extension `.py`.  Open a file and look in th3e lower right corner to see the file type interpretted by vscode.
+Snippets are file type dependent.  For instance, python code snippets will work in files with type extension `.py`.  Open a file and look in th3e lower right corner to see the file type interpreted by vscode.
 
 For each snippet, to set them up in vscode:
 
-1. Open the `Command Pallete` and select `Preferences: Configure User Snippets`.
+1. Open the `Command Palette` and select `Preferences: Configure User Snippets`.
 1. Type the name of the file type, (Makefile/toml/devcontainer/dockercompose/etc).  
     * If the type already exists, select it.  
     * If not, select `New Global Snippets file...`.
 1. The file will have an existing dictionary {}.  Add the snippet to the dictionary.  If you paste the snippet at the bottom of the file, make sure to add a comma to the end of the previous snippet.
 
+#### Makefile
+
+On Windows, ensure make is installed.  This can be done by installing [Chocolatey](https://chocolatey.org/install) and running `choco install make` from an elevated terminal.
+Start with the make file.  Once this pasted in execute `make setup_project`.
+
+```json
+{
+	"Python Default Makefile Full": {
+		"prefix": "python_default_makefile_full",
+		"body": [
+        ".PHONY: setup_project",
+        "setup_project:",
+        "\tmkdir .devcontainer",
+        "",
+		".PHONY: build",
+		"build:",
+		"\tpip install -e .",
+		"",
+		".PHONY: docker_clean",
+		"docker_clean:",
+		"\tdocker image prune --all -f",
+		"\tdocker container prune -f",
+		"\tdocker volume prune -f --all",
+		"\tcd .devcontainer && docker-compose down --rmi all --volumes --remove-orphans",
+		"",
+		".PHONY: mypy",
+		"mypy:",
+		"\tmypy --ignore-missing-imports documentanalysis/",
+		"",
+		".PHONY: test",
+		"test:",
+		"\tpytest test/",
+		"",
+		".PHONY: coverage",
+		"coverage:  ## Run tests with coverage",
+		"\tcoverage erase",
+		"\tcoverage run -m pytest",
+		"\tcoverage report -m",
+		"",
+		".PHONY: lint",
+		"lint: pylint flake8 black mypy",
+		"",
+		".PHONY: pylint",
+		"pylint:",
+		"\tpylint --max-line-length=120 documentanalysis/",
+		"",
+		".PHONY: flake8",
+		"flake8:",
+		"\tflake8 --max-line-length=120 --ignore=E266,E402,F841,F401,E302,E305 .",
+		"",
+		".PHONY: checklist",
+		"checklist: lint typehint test"
+		],
+		"description": "Create a full Makefile"
+  }
+}
+```
+
 #### pyproject.toml
+
+Next we need to create the pyproject file.
+
+This snippet includes a project name variable.  Use the tab key to move between variables.
 
 ```json
 "pyproject.toml": {
@@ -97,14 +183,14 @@ For each snippet, to set them up in vscode:
 			"[tool.pylint.'MESSAGES CONTROL']",
 			"max-line-length = 120",
 			"",
-			"[project.scripts]",
-			"$1-cli = \"$1-cli:main_cli\"",
-			"#Equivilent to `from spam import main_cli; main_cli()`",
+			"#[project.scripts]",
+			"#$1-cli = \"$1-cli:main_cli\"",
+			"#Equivalent to `from spam import main_cli; main_cli()`",
 			"#Touch $1/__init__.py",
 			"# echo 'def main_cli(): pass' >> $1/__init__.py",
 			"",
-			"[project.gui-scripts]",
-			"$1-gui = \"$1-gui:main_cli\"",
+			"#[project.gui-scripts]",
+			"#$1-gui = \"$1-gui:main_cli\"",
 			"# echo 'def main_gui(): pass' >> $1/__init__.py",
 			"",
 			"# Deploy using pip install -e .[all]",
@@ -112,58 +198,9 @@ For each snippet, to set them up in vscode:
 	}
 ```
 
-#### Makefile
-
-```json
-{
-	"Python Default Makefile Full": {
-		"prefix": "python_default_makefile_full",
-		"body": [
-		".PHONY: build",
-		"build:",
-		"\tpip install -e .",
-		"",
-		".PHONY: docker_clean",
-		"docker_clean:",
-		"\tdocker image prune --all -f",
-		"\tdocker container prune -f",
-		"\tdocker volume prune -f --all",
-		"\tcd .devcontainer && docker-compose down --rmi all --volumes --remove-orphans",
-		"",
-		".PHONY: mypy",
-		"mypy:",
-		"\tmypy --ignore-missing-imports documentanalysis/",
-		"",
-		".PHONY: test",
-		"test:",
-		"\tpytest test/",
-		"",
-		".PHONY: coverage",
-		"coverage:  ## Run tests with coverage",
-		"\tcoverage erase",
-		"\tcoverage run -m pytest",
-		"\tcoverage report -m",
-		"",
-		".PHONY: lint",
-		"lint: pylint flake8 black mypy",
-		"",
-		".PHONY: pylint",
-		"pylint:",
-		"\tpylint --max-line-length=120 documentanalysis/",
-		"",
-		".PHONY: flake8",
-		"flake8:",
-		"\tflake8 --max-line-length=120 --ignore=E266,E402,F841,F401,E302,E305 .",
-		"",
-		".PHONY: checklist",
-		"checklist: lint typehint test"
-		],
-		"description": "Create a full Makefile"
-  }
-}
-```
-
 #### Devcontainer
+
+Create file devcontainer/devcontainer.json
 
 ##### .devcontainer/devcontainer.json
 
@@ -208,6 +245,8 @@ For each snippet, to set them up in vscode:
 ##### .devcontainer/docker-compose.yml
 
 I am leaving a commented out section for a database.  This is a common use case, but not always needed.
+
+Create file .devcontainer/docker-compose.yml
 
 ```json
 "Python Default Docker Compose": {
@@ -256,8 +295,10 @@ I am leaving a commented out section for a database.  This is a common use case,
 
 ##### .devcontainer/Dockerfile
 
+Create file .devcontainer/Dockerfile.
+
 ```json
-"python-defulat-dockerfile": {
+"python-default-dockerfile": {
 		"prefix": "python-default-dockerfile",
 		"body": [
 			"# set base image (host OS)",
@@ -274,3 +315,47 @@ I am leaving a commented out section for a database.  This is a common use case,
 		"description": "Create a Dockerfile"
 	}
 ```
+
+## Preparing for devcontainer
+
+Once this is done, open the command palette and type `Remote-Containers: Reopen in Container`.
+
+Initially this will throw an error TODO: Fix this.
+This is because the python project is not yet setup.
+
+To quickly setup a usable project that will install, do the following.
+
+1. Create a directory with the project name.
+1. Create a file `__init__.py` in the directory.
+1. Add the following to that init file.
+
+```python
+def main_cli() -> int:
+    return 0
+
+
+def main_gui() -> int:
+    return 0
+```
+
+1. Create a file called `main.py` at the top level directory.
+1. Add the following to that file.
+
+```python
+#!/usr/bin/env python
+import sys
+
+def main() -> int:
+    print("test")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+```
+
+## Starting the devcontainer
+
+Once ready, open up a terminal in vscode and type `make build`.  This installs your module as a module in python in the container.  The power here is that you do not need to be concerned with pathing as the -e flag installs the module in editable mode.  This mode uses a symlink to the source code.
+
+You can view your running containers by typing `docker ps`.
