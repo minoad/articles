@@ -1,0 +1,13 @@
+- name: Install consul
+  hosts: consul*
+  become: yes
+  tasks:
+  - name: docker | repo | apt key
+    ansible.builtin.get_url:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      dest: /usr/share/keyrings/docker.asc
+
+  - name: docker | repo | apt source
+    ansible.builtin.apt_repository:
+      repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+      state: present

@@ -1,0 +1,7 @@
+- name: Write hostname
+  hosts: consul*
+  tasks:
+  - name: write hostname using jinja2
+    ansible.builtin.template:
+      src: templates/consul_service_config.j2
+      dest: /tmp/hostname

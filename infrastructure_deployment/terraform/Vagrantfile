@@ -1,0 +1,38 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+require "ipaddr"
+
+service_type = ENV["service_type"]
+hostname = ENV["hostname"]
+ip = ENV["ip"]
+cpus = ENV["cpus"]
+mem = ENV["mem"]
+launch_scripts = ENV["launch_scripts"]
+
+#vm_ip = IPAddr.new(ENV["ip"])
+#puts "memory: #{vm_ip}"
+#puts "#{vm_ip.to_s}"
+
+Vagrant.configure("2") do |config|
+  config.vm.define "#{hostname}" do |client|
+    client.vm.box = "ubuntu/jammy64"
+    client.vm.hostname = "#{hostname}"
+    client.vm.network "public_network", bridge: "enp4s0", ip: "#{ip}"
+    client.ssh.insert_key = false
+    client.ssh.forward_agent = true
+    client.vm.provider "virtualbox" do |vb|
+      vb.memory = "#{mem}"
+      vb.cpus = "#{cpus}"
+      vb.gui = false
+    end
+    client.vm.provision "shell" do |s|
+      ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
+      s.inline = <<-SHELL
+      echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys
+      echo #{ssh_pub_key} >> /root/.ssh/authorized_keys
+    SHELL
+    end
+  end
+end
+
+#config.vm.network "public_network", bridge: "enp4s0", ip: $vm_ip

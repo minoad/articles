@@ -1,5 +1,46 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+require "ipaddr"
+
+# Function to perform partial match I dont really like this.  Come back to this later.
+def partial_match(ips, name)
+  ips.each do |k, v|
+    if name.include?(k)
+      return v
+    end
+  end
+  return nil
+end
+
+def get_ip(name)
+  ips = {
+    "master" => IPAddr.new("192.168.1.15")..IPAddr.new("192.168.1.10"),
+    "worker" => IPAddr.new("192.168.1.30")..IPAddr.new("192.168.1.39"),
+    "other" => IPAddr.new("192.168.1.40")..IPAddr.new("192.168.1.60"),
+    # Services match on support service. ldap, consul, etc
+    "service" => IPAddr.new("192.168.1.100")..IPAddr.new("192.168.1.110"),
+  }
+  ip_addr = partial_match(ips, name)
+  puts "ip for host #{name} is #{ip_addr}"
+  return ip_addr.to_a.pop
+end
+
+def get_launch_scripts(name)
+  launch_scripts = {
+    "service-consul01" => ["scripts/all.sh",  "scripts/terraform_setup.sh",],
+    "kubenod01" => ["scripts/all.sh", "scripts/kube_node_setup.sh"],
+  }
+  results = launch_scripts.fetch(name, [])
+  return results
+end
+
+def get_paths_to_copy(name)
+  paths = {
+    "service-consul01" => [{"from" => "terraform/consul/", "to" => "/tmp/consul/"}],
+  }
+  results = paths.fetch(name, [])
+  return results
+end
 
 Vagrant.configure("2") do |config|
   config.vm.provider :virtualbox do |v|
@@ -8,103 +49,176 @@ Vagrant.configure("2") do |config|
   end
 
   # Set Constants
-  private_ip_network = "192.168.1.0/24"
-  private_ip_prefix = "192.168.1."
-  master_host_name = "k8smaster"
+  PRIVATE_IP_NETWORK = "192.168.1.0/24"
+  PRIVATE_IP_PREFIX = "192.168.1."
+  MASTER_HOST_NAME = "k8smaster"
+  SCRIPTS_DIR = "scripts/"
+  CONFIGS_DIR = "configs/"
 
-  ## TODO: I need to decide if i want to keep these directives here or move them to the startup script.
-  ## If used as a tutorial, it may be better to keep them here.
-
-  # Create any required default directories for all nodes
-  config.vm.provision :shell, :privileged => true, :inline => "mkdir -m 0755 -p /etc/apt/keyrings/"
-  config.vm.provision :shell, :privileged => true, :inline => "mkdir /etc/containerd"
-
-  # Copy required configs.  Usually a copy to tmp and associated privileged mv to the correct location
-  ## Set hosts
-  config.vm.provision "file", source: "configs/etc_hosts", destination: "/tmp/hosts"
-  config.vm.provision :shell, :inline => "rm -f /etc/hosts && mv /tmp/hosts /etc/hosts", :privileged => true
   
-  ## Set containerd config
-  config.vm.provision "file", source: "configs/containerd_config.toml", destination: "/tmp/containerd_config.toml"
-  config.vm.provision :shell, :inline => "mv /tmp/containerd_config.toml /etc/containerd/config.toml", :privileged => true
-
-  # Prepare nodes
-  config.vm.provision "file", source: "scripts/kube_node_setup.sh", destination: "/tmp/kube_node_setup.sh"
-  config.vm.provision :shell, :inline => "/tmp/kube_node_setup.sh", :privileged => true
-
-  # Add some default troubleshooting
-  config.vm.provision "file", source: "scripts/troubleshoot.sh", destination: "/tmp/troubleshoot.sh"
-  config.vm.provision :shell, :inline => "mv /tmp/troubleshoot.sh /usr/local/bin/troubleshoot.sh", :privileged => true
-
-  # Deploy and setup the master node
-  config.vm.define :k8smaster do |k8smaster|
-    private_ip = "#{private_ip_prefix}10"
-    k8smaster.vm.box = "ubuntu/jammy64"
-    k8smaster.vm.hostname = "#{master_host_name}"
-    k8smaster.vm.network "public_network", bridge: "enp4s0", ip: "#{private_ip}"
-
-    # Prepare master
-    k8smaster.vm.provision "file", source: "scripts/kube_master_setup.sh", destination: "/tmp/kube_master_setup.sh"
-    k8smaster.vm.provision :shell, :inline => "/tmp/kube_master_setup.sh", :privileged => true
-
-    # Setup Kubernetes
-    k8smaster.vm.provision :file, :source => "configs/kubeadm_config.yaml", :destination => "/tmp/kubeadm_config.yaml"
-    k8smaster.vm.provision :shell, :inline => "kubeadm config images pull", :privileged => true  
-    k8smaster.vm.provision :shell, :inline => "kubeadm init --config /tmp/kubeadm_config.yaml 2>&1 | tee /tmp/kubeadm_out.txt", :privileged => true  
+  def create_client(name, config)
+    ip = get_ip(name)
+    puts "Running setup scripts #{get_launch_scripts(name)} for #{name}"
+    puts "Setting up instance named #{name} with ip #{ip}"
     
-    # setup kubectl
-    k8smaster.vm.provision :shell, :inline => "mkdir -p $HOME/.kube && cp -i /etc/kubernetes/admin.conf $HOME/.kube/config && chown $(id -u):$(id -g) $HOME/.kube/config", :privileged => true
-    k8smaster.vm.provision :shell, :inline => "cat $HOME/.kube/config > /vagrant/kube_config", :privileged => true
-    k8smaster.vm.provision :shell, :inline => "mkdir -p /home/vagrant/.kube && cp /vagrant/kube_config /home/vagrant/.kube/config", :privileged => true
+    config.vm.define name do |client|
+      client.vm.box = "ubuntu/jammy64"
+      client.vm.hostname = name
+      client.vm.network "public_network", bridge: "enp4s0", ip: "#{ip}"
+      #config.vm.provision "run kube_node setup", type: "shell", path: "#{SCRIPTS_DIR}/kube_node_setup.sh", :privileged => true
+      #setup_scripts = get_launch_scripts(name)
+      
+      get_paths_to_copy(name).each do |path|
+        puts "for #{name}, copying from #{path['from']} to #{path['to']}"
+        config.vm.provision :file,
+          :source => "#{path['from']}",
+          :destination => "#{path['to']}"
+      end
 
-    # Distribute the join command
-    k8smaster.vm.provision :shell, :inline => "cat /tmp/kubeadm_out.txt | tail -n 2 > /vagrant/join.sh", :privileged => true
+      get_launch_scripts(name).each do |script|
+        puts "for #{name}, running setup script #{script}"
+        config.vm.provision "run setup scripts",
+          type: "shell",
+          path: "#{script}",
+          :privileged => true
+      end
 
-    # Calico deploy
-    k8smaster.vm.provision :shell, :inline => "kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.3/manifests/tigera-operator.yaml", :privileged => true
-    k8smaster.vm.provision :shell, :inline => "wget https://raw.githubusercontent.com/projectcalico/calico/v3.27.3/manifests/custom-resources.yaml", :privileged => true
-    k8smaster.vm.provision :shell, :inline => "sed -i 's|cidr: 192.168.0.0/16|cidr: 172.16.0.0/12|g' custom-resources.yaml", :privileged => true
-    k8smaster.vm.provision :shell, :inline => "kubectl create -f custom-resources.yaml", :privileged => true
-  
-    # Remove Taints
-    ## kubectl taint nodes --all node-role.kubernetes.io/control-plane-
-    ## kubectl taint nodes --all node-role.kubernetes.io/master-
-  end
-
-  %w{k8snode01 k8snode02}.each_with_index do |name, i|
-    config.vm.define name do |worker|
-      worker.vm.box = "ubuntu/jammy64"
-      worker.vm.hostname = name
-      worker.vm.network "public_network", bridge: "enp4s0", ip: "#{private_ip_prefix}#{i + 11}"
-      worker.vm.provision :shell, :inline => "mkdir -p $HOME/.kube/ && cp /vagrant/kube_config $HOME/.kube/config", :privileged => true 
-      worker.vm.provision :shell, :inline => "mkdir -p /home/vagrant/.kube/ && cp /vagrant/kube_config /home/vagrant/.kube/config", :privileged => true 
-      worker.vm.provision :shell, :inline => "bash /vagrant/join.sh", :privileged => true
     end
   end
+
+  # Services are bootstrapped first.  These are the services that are required for the cluster to function.
+  ["service-consul01", "service-ldap01", "client01"].each_with_index { |name, i| create_client(name, config) }
 end
 
+  ##################### old ############################
+#   %w{k8smaster k8snode01 k8snode02}.each_with_index do |name, i|
 
-#### BEGIN PROVISIONING PRIMARY NODE####
-$provision_master_node = <<-SHELL
-## experiment here
-# sed -i "s|advertiseAddress: 1.2.3.4|advertiseAddress: 192.168.1.10|g" kubeadm_config.yaml
-# sed -i "s|scheduler: {}|  podSubnet: "10.244.0.0/16"|g" kubeadm_config.yaml
-# sed -i "s|scheduler: {}|  podSubnet: "192.168.1.0/24"|g" kubeadm_config.yaml
-# sed -i "s|scheduler: {}|  serviceSubnet: "10.96.0.0/12"|g" kubeadm_config.yaml
+#     # Pre stuff for all nodes
+#     ## Move files onto the vm that are required
+#     puts "Setting up #{name}, I am in the top level"
+#     config.vm.provision "file", source: "#{CONFIGS_DIR}/etc_hosts", destination: "/tmp/hosts"
+#     config.vm.provision "file", source: "#{CONFIGS_DIR}/containerd_config.toml", destination: "/tmp/containerd_config.toml"
+#     config.vm.provision "troubleshoot_script_setup", type: "file", source: "#{SCRIPTS_DIR}/troubleshoot.sh", destination: "$HOME/troubleshoot.sh"
 
-# echo "scheduler: {}" >> kubeadm_config.yaml
-# echo "kind: KubeletConfiguration" >> kubeadm_config.yaml
-# echo "apiVersion: kubelet.config.k8s.io/v1beta1" >> kubeadm_config.yaml
-# echo "cgroupDriver: systemd" >> kubeadm_config.yaml
-#sudo kubeadm init --config kubeadm_config.yaml | tee kube_init_results.txt # --apiserver-advertise-address=10.0.0.10 --pod-network-cidr=10.0.3.0/24 | tee ~/kube_init.txt # --apiserver-advertise-address=10.0.0.10 --pod-network-cidr=10.244.0.0/16 | grep "kubeadm join" | tee /vagrant/join.sh
+#     # Prepare nodes
+#     config.vm.provision "run kube_node setup", type: "shell", path: "#{SCRIPTS_DIR}/kube_node_setup.sh", :privileged => true
 
-# mkdir -p $HOME/.kube && sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config && sudo chown $(id -u):$(id -g) $HOME/.kube/config
+#     if name.include? "master"
+#       puts "we are on master"
+#       config.vm.define :k8smaster do |k8smaster|
+#         private_ip = "#{PRIVATE_IP_PREFIX}10"
+#         k8smaster.vm.box = "ubuntu/jammy64"
+#         k8smaster.vm.hostname = "#{MASTER_HOST_NAME}"
+#         k8smaster.vm.network "public_network", bridge: "enp4s0", ip: "#{private_ip}"
 
-wget https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
-kubectl apply -f kube-flannel.yml
-sleep 15
-sudo systemctl restart containerd
-kubectl get nodes -o jsonpath='{.items[*].spec.podCIDR}'
-cat /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+#         # Prepare master
+#         k8smaster.vm.provision "run kube_master setup", type: "shell", path: "#{SCRIPTS_DIR}/kube_master_setup.sh", :privileged => true
 
-SHELL
+#         ## Prep the configuration files for master deployment
+#         k8smaster.vm.provision :file,
+#           :source => "#{CONFIGS_DIR}/master.env",
+#           :destination => "/tmp/master.env"
+#         k8smaster.vm.provision :file,
+#           :source => "#{CONFIGS_DIR}/kubeadm_config_templ.yaml",
+#           :destination => "/tmp/kubeadm_config_templ.yaml"
+#         k8smaster.vm.provision "create master init file",
+#           type: "shell",
+#           :inline => "source /tmp/master.env && envsubst < /tmp/kubeadm_config_templ.yaml > /tmp/kubeadm_config.yaml",
+#           :privileged => true
+
+#         # Setup Kubernetes
+#         k8smaster.vm.provision "pull kubeadmin images",
+#           type: "shell",
+#           :inline => "kubeadm config images pull",
+#           :privileged => true
+#         k8smaster.vm.provision "execute kubeadmin init",
+#           type: "shell",
+#           :inline => "kubeadm init --config /tmp/kubeadm_config.yaml 2>&1 | tee /tmp/kubeadm_out.txt",
+#           :privileged => true
+
+#         # setup kubectl
+#         k8smaster.vm.provision "setup kubectl config",
+#           type: "shell",
+#           :inline => "mkdir -p $HOME/.kube && cp -i /etc/kubernetes/admin.conf $HOME/.kube/config && chown $(id -u):$(id -g) $HOME/.kube/config",
+#           :privileged => true
+#         k8smaster.vm.provision "move kubectl config to vagrant shared directory",
+#           type: "shell",
+#           :inline => "cat $HOME/.kube/config > /vagrant/kube_config",
+#           :privileged => true
+#         k8smaster.vm.provision "token value to shared dir",
+#           type: "shell",
+#           :inline => "grep 'token:' /tmp/kubeadm_out.txt | awk '{print $4}' > /vagrant/token.env",
+#           :privileged => true
+#         k8smaster.vm.provision "cert value to shared dir",
+#           type: "shell",
+#           :inline => "grep 'discovery-token-ca-cert-hash' /tmp/kubeadm_out.txt | awk '{print $2}' > /vagrant/discovery_token_ca_cert.env",
+#           :privileged => true
+#         k8smaster.vm.provision "move kubectl config to additional users",
+#           type: "shell",
+#           :inline => "mkdir -p /home/vagrant/.kube && cp /vagrant/kube_config /home/vagrant/.kube/config",
+#           :privileged => true
+
+#         # Calico deploy
+#         k8smaster.vm.provision "get calico operators",
+#           type: "shell",
+#           :inline => "kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.3/manifests/tigera-operator.yaml",
+#           :privileged => true
+#         k8smaster.vm.provision "get calico resources",
+#           type: "shell",
+#           :inline => "wget https://raw.githubusercontent.com/projectcalico/calico/v3.27.3/manifests/custom-resources.yaml",
+#           :privileged => true
+#         k8smaster.vm.provision "prepare calico config file",
+#           type: "shell",
+#           :inline => "sed -i 's|cidr: 192.168.0.0/16|cidr: 172.16.0.0/12|g' custom-resources.yaml",
+#           :privileged => true
+#         k8smaster.vm.provision "execute the calico command",
+#           type: "shell",
+#           :inline => "kubectl create -f custom-resources.yaml",
+#           :privileged => true
+#         # todo: this should use apply not create
+
+#         # Remove Taints
+#         ## kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+#         ## kubectl taint nodes --all node-role.kubernetes.io/master-
+#       end
+#     end
+
+#     if name.include? "node"
+#       puts "we are on node"
+#       config.vm.define name do |worker|
+#         worker.vm.box = "ubuntu/jammy64"
+#         worker.vm.hostname = name
+#         worker.vm.network "public_network", bridge: "enp4s0", ip: "#{PRIVATE_IP_PREFIX}#{i + 11}"
+
+#         worker.vm.provision "copy kubectl configs to home directories", type: "shell", :inline => "cp /vagrant/kube_config $HOME/.kube/config && cp /vagrant/kube_config /home/vagrant/.kube/config", :privileged => true
+#         #worker.vm.provision "copy the kubelet drop in config", type: "shell", path: "scripts/kubelet_config.sh", :privileged => true
+#         #worker.vm.provision "move kubelet config dropin into config folder", type: "shell", :inline => "mv /tmp/kubelet_config.yml", :privileged => true
+#         #k8smaster.vm.provision :file, :source => "#{CONFIGS_DIR}/kubeadm_join.yaml", :destination => "/tmp/kubeadm_join.yaml"
+#         ## Prep the configuration files for worker deployment
+#         worker.vm.provision :file, :source => "#{CONFIGS_DIR}/worker.env", :destination => "/tmp/worker.env"
+#         worker.vm.provision :file, :source => "#{CONFIGS_DIR}/kubeadm_worker_join_templ.yaml", :destination => "/tmp/kubeadm_worker_join_templ.yaml"
+#         worker.vm.provision "create worker join file", type: "shell", :inline => "source /tmp/worker.env && envsubst < /tmp/kubeadm_worker_join_templ.yaml > /tmp/kubeadm_worker_join.yaml", :privileged => true
+#         # join configuration ref https://kubernetes.io/docs/reference/config-api/kubeadm-config.v1beta3/#kubeadm-k8s-io-v1beta3-NodeRegistrationOptions
+#         # worker.vm.provision "join the worker useing the kubeworker_join.sh", type: "shell", path: "#{SCRIPTS_DIR}/kubeworker_join.sh", :privileged => true
+
+#         worker.vm.provision "join using config", type: "shell", :inline => "kubeadm join --config /tmp/kubeadm_worker_join.yaml | tee /tmp/join.log", :privileged => true
+#       end
+#     end
+#   end
+# end
+
+# after this, run through initial namespace setup
+## Prometheus
+# Create namespace
+# create cluster role
+# create configmap
+# create deployment
+## Port forward connection.  common for debugging.
+# Setup nodeport and loadbalancer services
+# setup ingress
+
+## Kubestatemetrics https://devopscube.com/setup-kube-state-metrics/
+## alertmanager https://devopscube.com/alert-manager-kubernetes-guide/
+## grafana https://devopscube.com/setup-prometheus-grafana-monitoring-on-kubernetes/
+## grafana method 2 https://devopscube.com/setup-grafana-kubernetes/
+## nodeexporter https://devopscube.com/node-exporter-kubernetes/
