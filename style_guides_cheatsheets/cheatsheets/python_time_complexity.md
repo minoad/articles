@@ -27,23 +27,22 @@ Many of the issues we faced stemmed from decisions made during the initial devel
 In those early days, the team hadn't anticipated the exponential growth of their data.
 As a result, the architecture and algorithms they chose struggled to handle the increased scale efficiently.
 
-## Details
-
-We use `Big-O` notation to express the complexity of an algorithm as it relates to the size of the input.
-Each `O()` will be referred to as a `Complexity Class`.  `n` denotes the number of elements in list.  In some cases where more than one input list exists `m` is used.
-
-When analyzing algorithmic efficiency, we're often more concerned with the relative sizes of input datasets rather than their absolute values. For instance, if dataset n1 has 10 more elements than dataset n2, this minor discrepancy doesn't significantly affect our assessment. What matters more are the higher-order factors that determine how the algorithm's performance scales with increasing input sizes.
+When analyzing algorithmic efficiency, we're often more concerned with the relative sizes of input datasets rather than their absolute values. For instance, if dataset `n1` has 10 more elements than dataset `n2`, this minor discrepancy doesn't significantly affect our assessment. What matters more are the higher-order factors that determine how the algorithm's performance scales with increasing input sizes.
 
 By focusing on these higher-order factors, we can gain insights into how the algorithm will perform as the input size grows to much larger scales. This approach allows us to make more generalized statements about an algorithm's efficiency, independent of specific input sizes.
 
 In essence, we're interested in understanding how the algorithm's performance changes as we scale up the input size, not fixating on individual constants or minor differences between dataset sizes.
 
+## Assumptions and Required Understanding
+
+* We use `Big-O` notation to express the complexity of an algorithm as it relates to the size of the input.
+* `O(Any)` are referred to as complexity classes.
+* `n` denotes the number of elements in list.  In some cases where more than one input list exists `m` is used.
+* Asymptotic analysis is concerned with the dominant term.  If your analysis reveals `2n^2` number of operations, then `n^2` dominates `2n`, so the 2 is dropped to give us `O(n^2)`.
+
 ## Real Life Algorithmic Examples
 
 It can be helpful to de-abstract the thought process by using real world examples of algorithms which exhibit specific complexity classes.
-Asymptotic analysis relates the execution time to complete a process and its relationship to input size.
-
-Input size is denoted by n.
 
 ### Example 1 - Common Constant Example `O(1)`
 
@@ -59,13 +58,16 @@ These examples highlight the fundamental characteristic of constant time operati
 
 ### Example 2 - Common Linear Example `O(n)`
 
+Linear complexity class scales upward linearly as you increase the input.
+If the input of `n=10` takes 5 minutes, the an input of `n=20` will take 10 minutes.
+
 For example, if i give you 5 dice, ask you to roll them and then tell me the sum, you would:
 
 ```pseudo code
 op_count    operation
 1           sum_of_dice=0
-1           4_dice_in_list = [die, die, die, die, die]
-n           for die in 4_dice_in_list:
+1           5_dice_in_list = [die, die, die, die, die]
+n           for die in 5_dice_in_list:
 1               result=roll_die()
 1               sum_of_dice=sum_of_dice + result
 1           print(sum_of_dice)
@@ -83,7 +85,7 @@ If 5 dice takes 1 minute, you can predict that 10 dice will take 2 minutes.
 
 Finding a Word in a Dictionary: When searching for a word in a physical dictionary, you typically start with a rough estimate of where the word might be located based on its initial letter. 
 You then divide the search space in half with each page turn, narrowing down the possible location of the word.
-This process closely resembles a binary search algorithm, which has a time complexity of `O(log n)`.
+This process closely resembles a binary search algorithm, which has a complexity class of `O(log n)`.
 
 Im having difficulty describing this in Pseudo code without getting into programmatic weeds.
 Basically, we:
