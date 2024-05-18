@@ -1,5 +1,44 @@
 # Python Big-O
 
+## Introduction
+
+Welcome to the wonderful world of Asymptotic Analysis of Algorithms!
+
+Here we will attempt to explain and understand the efficiency of algorithms relative to the size of the input.
+This allows us to make informed decisions when writing code, implementing infrastructure and sometime even daily activity.
+
+Around 15 years ago, I worked with a company that had developed an application a decade earlier. Back then, they were working with a modest database of a few thousand records.
+However, by the time I arrived, the database had ballooned to several million records.
+What was once a smooth operation, with requests completing in just a couple of seconds, had now become a sluggish experience, often taking minutes to process.
+
+Many of the issues we faced stemmed from decisions made during the initial development phase of the software.
+In those early days, the team hadn't anticipated the exponential growth of their data.
+As a result, the architecture and algorithms they chose struggled to handle the increased scale efficiently.
+
+Asymptotic Analysis is a powerful tool for quantifying the performance characteristics of algorithms.
+Whether you're a seasoned developer looking to deepen your understanding of algorithmic complexity or a newcomer eager to explore the fundamentals, this guide has something for everyone.
+I am also writing this to function as a quick reference guide.  Included in each `Complexity Class` are examples and shortcuts to indicate them.
+
+Additionally, we'll learn how to validate our assumptions about algorithmic complexity using Python's profiling tools, equipping us with the means to measure and analyze the performance of our code empirically.
+
+So, whether you're embarking on a journey to optimize your code for maximum efficiency or simply seeking to deepen your understanding of algorithmic principles, join us as we unravel the mysteries of Asymptotic Analysis.
+
+Let's dive in! 🚀
+
+## Details
+
+Each `O()` will be referred to as a `Complexity Class`.  `n` denotes the number of elements in list.  In some cases where more than one input list exists `m` is used.
+
+When analyzing algorithmic efficiency, we're often more concerned with the relative sizes of input datasets rather than their absolute values. For instance, if dataset n1 has 10 more elements than dataset n2, this minor discrepancy doesn't significantly affect our assessment. What matters more are the higher-order factors that determine how the algorithm's performance scales with increasing input sizes.
+
+By focusing on these higher-order factors, we can gain insights into how the algorithm will perform as the input size grows to much larger scales. This approach allows us to make more generalized statements about an algorithm's efficiency, independent of specific input sizes.
+
+In essence, we're interested in understanding how the algorithm's performance changes as we scale up the input size, not fixating on individual constants or minor differences between dataset sizes.
+
+
+
+
+
 ## Profile to validate your assumptions in python
 
 * `import cProfile; cProfile.run('function_to_test()', sort="ncalls")`
@@ -58,7 +97,7 @@ These examples highlight the fundamental characteristic of constant time operati
 
 ## Overview
 
-I have included many of the common `O()` below along with telltale signs and examples.  Below that are the expected `O()` for many common python operations.
+I've listed several common O() notations below, along with indicators and examples. Additionally, I've included the expected O() complexities for various common Python operations.
 
 Some caveats and mistakes i find myself making.
 
