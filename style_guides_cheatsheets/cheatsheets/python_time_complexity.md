@@ -36,7 +36,7 @@ In essence, we're interested in understanding how the algorithm's performance ch
 ## Assumptions and Required Understanding
 
 * We use `Big-O` notation to express the complexity of an algorithm as it relates to the size of the input to that algorithm.
-* These are called `Complexity Classes`.  The distinct complexity classes im working with are, ordered by average complexity: 
+* These are called `Complexity Classes`.  The distinct complexity classes I'm working with are: (ordered by average complexity)
     1. Constant Time: `O(1)`
     2. Logarithmic Time: `O(log n)`
     3. Sublinear Time: `O(√n)`
@@ -442,7 +442,9 @@ Some caveats and mistakes i find myself making.
 
 These complexities assume average-case scenarios for most operations, and some operations (especially in dictionaries and sets) can degrade to worse cases under certain conditions, such as poor hash functions leading to many collisions. However, in general, these are the complexities you will encounter in typical use cases.
 
-## Profiling
+## Python Code
+
+### Profiling
 
 * `import cProfile; cProfile.run('function_to_test()', sort="ncalls")`
 * `python -m cProfile -s ncalls .\program_to_validate.py`
@@ -459,7 +461,7 @@ Sorting:
 
 If you have a function, and you believe it runs in `O(n)`: then `import cProfile; cProfile.run('function_to_test()', sort="ncalls")` should be equal to `function_to_test(x) = len(x)`.
 
-## Python Call Counts Code
+### Python Call Counts Code
 
 ```python
 """
@@ -598,4 +600,49 @@ def main():
 if __name__ == "__main__":
     cProfile.run('main()', sort="ncalls")
 
+```
+
+### Complexity Plots
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define the range of input sizes (n)
+n_values = np.linspace(1, 10, 100)
+
+# Define the corresponding execution times for each complexity class
+constant_time = np.ones_like(n_values)
+logarithmic_time = np.log(n_values)
+sublinear_time = np.sqrt(n_values)
+linearithmic_time = n_values * np.log(n_values)
+linear_time = n_values
+polynomial_time = n_values ** 2
+quadratic_time = n_values ** 2
+cubic_time = n_values ** 3
+exponential_time = 2 ** n_values
+factorial_time = np.math.factorial(n_values)
+
+# Plot the lines
+plt.figure(figsize=(10, 6))
+plt.plot(n_values, constant_time, label='Constant Time: O(1)')
+plt.plot(n_values, logarithmic_time, label='Logarithmic Time: O(log n)')
+plt.plot(n_values, sublinear_time, label='Sublinear Time: O(sqrt(n))')
+plt.plot(n_values, linearithmic_time, label='Linearithmic Time: O(n log n)')
+plt.plot(n_values, linear_time, label='Linear Time: O(n)')
+plt.plot(n_values, polynomial_time, label='Polynomial Time: O(n^2)')
+plt.plot(n_values, quadratic_time, label='Quadratic Time: O(n^2)')
+plt.plot(n_values, cubic_time, label='Cubic Time: O(n^3)')
+plt.plot(n_values, exponential_time, label='Exponential Time: O(2^n)')
+plt.plot(n_values, factorial_time, label='Factorial Time: O(n!)')
+
+# Add labels and title
+plt.xlabel('Input Size (n)')
+plt.ylabel('Execution Time')
+plt.title('Complexity Classes')
+plt.legend()
+
+# Show the plot
+plt.grid(True)
+plt.show()
 ```
