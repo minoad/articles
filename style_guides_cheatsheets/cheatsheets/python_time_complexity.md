@@ -7,14 +7,6 @@ Welcome to the wonderful world of Asymptotic Analysis of Algorithms!
 Here we will attempt to explain and understand the efficiency of algorithms relative to the size of the input.
 This allows us to make informed decisions when writing code, implementing infrastructure and sometime even daily activity.
 
-Around 15 years ago, I worked with a company that had developed an application a decade earlier. Back then, they were working with a modest database of a few thousand records.
-However, by the time I arrived, the database had ballooned to several million records.
-What was once a smooth operation, with requests completing in just a couple of seconds, had now become a sluggish experience, often taking minutes to process.
-
-Many of the issues we faced stemmed from decisions made during the initial development phase of the software.
-In those early days, the team hadn't anticipated the exponential growth of their data.
-As a result, the architecture and algorithms they chose struggled to handle the increased scale efficiently.
-
 Asymptotic Analysis is a powerful tool for quantifying the performance characteristics of algorithms.
 Whether you're a seasoned developer looking to deepen your understanding of algorithmic complexity or a newcomer eager to explore the fundamentals, this guide has something for everyone.
 I am also writing this to function as a quick reference guide.  Included in each `Complexity Class` are examples and shortcuts to indicate them.
@@ -24,6 +16,16 @@ Additionally, we'll learn how to validate our assumptions about algorithmic comp
 So, whether you're embarking on a journey to optimize your code for maximum efficiency or simply seeking to deepen your understanding of algorithmic principles, join us as we unravel the mysteries of Asymptotic Analysis.
 
 Let's dive in! 🚀
+
+### Why we do this
+
+Around 15 years ago, I worked with a company that had developed an application a decade earlier. Back then, they were working with a modest database of a few thousand records.
+However, by the time I arrived, the database had ballooned to several million records.
+What was once a smooth operation, with requests completing in milliseconds, had now become a sluggish experience, often taking minutes to process.
+
+Many of the issues we faced stemmed from decisions made during the initial development phase of the software.
+In those early days, the team hadn't anticipated the exponential growth of their data.
+As a result, the architecture and algorithms they chose struggled to handle the increased scale efficiently.
 
 ## Details
 
@@ -37,15 +39,28 @@ In essence, we're interested in understanding how the algorithm's performance ch
 
 ## Real Life Algorithmic Examples
 
+It can be helpful to de-abstract the thought process by using real world examples of algorithms which exhibit specific complexity classes.
 Big-O or asymptotic analysis relates the execution time to complete a process and its relationship to input size.
 
 Input size is denoted by n.
 
-### Example 1 - Common Linear Example `O(n)`
+### Example 1 - Common Constant Example `O(1)`
+
+Constant time examples are straightforward because they operate in the same amount of time regardless of input size. Here are two common examples:
+
+* **Lighting a room:**
+  * To illuminate a room, you simply flip a light switch. Whether the room is small or large, cluttered or empty, the time it takes to toggle the switch remains constant.
+  
+* **Retrieving a book from a sorted bookshelf:**
+  * Imagine a bookshelf neatly organized by title. When you need a specific book, you locate it by its position on the shelf. Regardless of how many books are on the shelf or their arrangement, fetching the desired book always takes the same amount of time.
+
+These examples highlight the fundamental characteristic of constant time operations: their **efficiency is independent of the size or complexity of the input**.
+
+### Example 2 - Common Linear Example `O(n)`
 
 For example, if i give you 5 dice, ask you to roll them and then tell me the sum, you would:
 
-```md
+```pseudo code
 op_count    operation
 1           sum_of_dice=0
 1           4_dice_in_list = [die, die, die, die, die]
@@ -62,17 +77,44 @@ The constant factors and lower-order terms are dropped, so the algorithm is clas
 This means the execution time grows linearly with the number of dice.
 If 5 dice takes 1 minute, you can predict that 10 dice will take 2 minutes.
 
-### Example 2 - Common Constant Example `O(1)`
 
-Constant time examples are straightforward because they operate in the same amount of time regardless of input size. Here are two common examples:
+### Example 3 - Common Log N example `O(log n)`
 
-* **Lighting a room:**
-  * To illuminate a room, you simply flip a light switch. Whether the room is small or large, cluttered or empty, the time it takes to toggle the switch remains constant.
-  
-* **Retrieving a book from a sorted bookshelf:**
-  * Imagine a bookshelf neatly organized by title. When you need a specific book, you locate it by its position on the shelf. Regardless of how many books are on the shelf or their arrangement, fetching the desired book always takes the same amount of time.
+Finding a Word in a Dictionary: When searching for a word in a physical dictionary, you typically start with a rough estimate of where the word might be located based on its initial letter. 
+You then divide the search space in half with each page turn, narrowing down the possible location of the word.
+This process closely resembles a binary search algorithm, which has a time complexity of `O(log n)`.
 
-These examples highlight the fundamental characteristic of constant time operations: their **efficiency is independent of the size or complexity of the input**.
+Im having difficulty describing this in Pseudo code without getting into programmatic weeds.
+Basically, we:
+
+1. Get our dictionary.
+2. Open it to an estimated page.
+3. Each of our hands now hold a set of pages split at the estimated page which we will refer to as dictionary_pages.
+4. We check if the word is on the estimated page (Best case and least likely complexity).  If so return the definition and we are done.
+5. Otherwise, if the first letter of first definition on the page < first letter of our word to find, we no set our dictionary_pages to what is in our left hand.  Otherwise, we set it to our right hand.
+6. We continue to do this until we have found our definition.
+
+Some comments on this complexity class.
+
+* While letters in the alphabet have no individual value (`is n greater than o` makes no sense) for the purposes of string analysis, the alphabet order is used to determine value `a=1, ..., z=26`.
+* We see our first shortcut here.  The size of the dictionary in constantly decreasing.  The amount of decrease is not important.
+    * If we always start at the middle page rather than an estimated position, and we cut exactly in half the complexity class will always be `O(log n)`
+* Lets assume your dictionary contains 1000 pages.  Every once in a while, you will open up to exactly the right page.  This would be a single operation `O(1)`.  But asymptotic analysis deals in averages.
+* Worst case is the number of times you split either left or right until you run out of pages.  On a dictionary of 1000 pages, if your word does exist, and you select correctly every time, it will take 10 operations, `base_2_log(1000)` \( \log_2(1000) \).
+
+```pseudo code
+op_count    operation
+1           word_found_on_page = False
+1           word_to_find
+1           dictionary_pages = pages_in_your_dictionary
+log(n)      While not word_found:
+                if len(dictionary_pages) <= 1: WORD_NOT_FOUND
+                left, right = dictionary_pages[first_half], dictionary_pages[second_half]
+                if not word_found_on_page(word_to_find) & first_definition_on_page.first_letter > word_to_find.first_letter: 
+                    dictionary_pages = left
+                if not word_found_on_page(word_to_find) & first_definition_on_page.first_letter < word_to_find.first_letter: 
+                    dictionary_pages = right
+```
 
 ## Common Complexity Classes
 
