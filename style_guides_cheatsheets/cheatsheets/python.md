@@ -2,7 +2,24 @@
 
 ## Reading and watching
 
+## List
 
+* `list.append()` should trigger you to look at a direct assignment.
+* Prefer direct assignment to pre-allocated list as it is always O(1)
+
+```python
+# O(1): Assigning a value to a specific index in a pre-allocated list is a constant-time operation
+# list(word) initializes the list with the correct size.
+# this is always O(1)
+self.stack: list[str] = list(word)
+
+# instead of
+## self.stack = [] initializes the list with a default size.
+## this default size may be exceeded thus requiring a resize operation.
+## This is an amortized O(1), however could theoretically be O(n)
+self.stack = []
+[self.stack.append(i) for i in list(word)]
+```
 
 ## New Project using Poetry
 
