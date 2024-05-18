@@ -15,7 +15,7 @@ Sorting:
 * `cumtime` is the cumulative time and includes the time the function is called, plus the time of all of the functions it calls.  
 * `ncalls` as an integer, the number of times the function is called.
 
-If you have a function, and you believe it function runs in `O(n)`: then `import cProfile; cProfile.run('function_to_test()', sort="ncalls")` should be equal to `function_to_test(x) = len(x)`.
+If you have a function, and you believe it runs in `O(n)`: then `import cProfile; cProfile.run('function_to_test()', sort="ncalls")` should be equal to `function_to_test(x) = len(x)`.
 
 ## Common Big-O Notations
 
@@ -23,7 +23,8 @@ Big-O or asymptotic analysis relates the execution time to complete a process an
 
 Input size is denoted by n.
 
-**Example 1**
+### Example 1 - Common Linear Example `O(n)`
+
 For example, if i give you 5 dice, ask you to roll them and then tell me the sum, you would:
 
 ```md
@@ -42,6 +43,20 @@ Asymptotic analysis is concerned with the dominant term, which is 2n.
 The constant factors and lower-order terms are dropped, so the algorithm is classified as O(n).
 This means the execution time grows linearly with the number of dice.
 If 5 dice takes 1 minute, you can predict that 10 dice will take 2 minutes.
+
+### Example 2 - Common Constant Example `O(1)`
+
+Constant time examples are straightforward because they operate in the same amount of time regardless of input size. Here are two common examples:
+
+* **Lighting a room:**
+  * To illuminate a room, you simply flip a light switch. Whether the room is small or large, cluttered or empty, the time it takes to toggle the switch remains constant.
+  
+* **Retrieving a book from a sorted bookshelf:**
+  * Imagine a bookshelf neatly organized by title. When you need a specific book, you locate it by its position on the shelf. Regardless of how many books are on the shelf or their arrangement, fetching the desired book always takes the same amount of time.
+
+These examples highlight the fundamental characteristic of constant time operations: their **efficiency is independent of the size or complexity of the input**.
+
+## Overview
 
 I have included many of the common `O()` below along with telltale signs and examples.  Below that are the expected `O()` for many common python operations.
 
