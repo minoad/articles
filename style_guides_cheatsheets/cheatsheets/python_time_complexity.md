@@ -100,7 +100,7 @@ Some comments on this complexity class.
 * We see our first shortcut here.  The size of the dictionary in constantly decreasing.  The amount of decrease is not important.
     * If we always start at the middle page rather than an estimated position, and we cut exactly in half the complexity class will always be `O(log n)`
 * Lets assume your dictionary contains 1000 pages.  Every once in a while, you will open up to exactly the right page.  This would be a single operation `O(1)`.  But asymptotic analysis deals in averages.
-* Worst case is the number of times you split either left or right until you run out of pages.  On a dictionary of 1000 pages, if your word does exist, and you select correctly every time, it will take 10 operations, `base_2_log(1000)` \( \log_2(1000) \).
+* Worst case is the number of times you split either left or right until you run out of pages.  On a dictionary of 1000 pages, if your word does exist, and you select correctly every time, it will take 10 operations, `base_2_log(1000)` $\( \log_2(1000) \)$.
 
 ```pseudo code
 op_count    operation
