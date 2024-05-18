@@ -36,11 +36,21 @@ In essence, we're interested in understanding how the algorithm's performance ch
 ## Assumptions and Required Understanding
 
 * We use `Big-O` notation to express the complexity of an algorithm as it relates to the size of the input to that algorithm.
+* These are called `Complexity Classes`.  The distinct complexity classes im working with are, ordered by average complexity: 
+    1. Constant Time: `O(1)`
+    2. Logarithmic Time: `O(log n)`
+    3. Sublinear Time: `O(√n)`
+    4. Linearithmic Time: `O(n log n)`
+    5. Linear Time: `O(n)`
+    6. Polynomial Time: `O(n^k)`
+    7. Quadratic Time: `O(n^2)`
+    8. Cubic Time: `O(n^3)`
+    9. Exponential Time: `O(2^n)`
+    10. Factorial Time: `O(n!)` - Factorial time is included for completeness.  I can not think of a situation in which I would publish code with this complexity.  Maybe a one off script for a small set of permutations.
 * When referring to all complexity classes in big-o notation, I use the generic `O(Any)`.
-* `O(Any)` are referred to as complexity classes.
 * `n` denotes the number of elements in list.  In some cases where more than one input list exists `m` is used.
 * Asymptotic analysis is concerned with the dominant term.  If your analysis reveals `2n^2` number of operations, then `n^2` dominates `2n`, so the 2 is dropped to give us `O(n^2)`.
-* Some things will be described as `amortized O(Any)`.  This means it is `usually` `O(Any)`.  You might get a bit worse than `O(Any)`, but on average you will get `O(Any)`.  This usally triggers me to find a way to go from the amoritized version to the pure version.
+* Some things will be described as `amortized O(Any)`.  This means it is `usually` `O(Any)`.  You might get a bit worse than `O(Any)`, but on average you will get `O(Any)`.  This usally triggers me to find a way to go from the amortized version to the pure version.
     * One example of this is python looping and appending to a list.  This is worse the direct assignment which does not require and resizing of the list.
 
 ## Shortcuts and Heuristics
