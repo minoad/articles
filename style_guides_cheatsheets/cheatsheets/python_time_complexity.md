@@ -1,4 +1,4 @@
-# Python Big-O
+# Python Asymptotic Analysis
 
 ## Introduction
 
@@ -29,6 +29,7 @@ As a result, the architecture and algorithms they chose struggled to handle the 
 
 ## Details
 
+We use `Big-O` notation to express the complexity of an algorithm as it relates to the size of the input.
 Each `O()` will be referred to as a `Complexity Class`.  `n` denotes the number of elements in list.  In some cases where more than one input list exists `m` is used.
 
 When analyzing algorithmic efficiency, we're often more concerned with the relative sizes of input datasets rather than their absolute values. For instance, if dataset n1 has 10 more elements than dataset n2, this minor discrepancy doesn't significantly affect our assessment. What matters more are the higher-order factors that determine how the algorithm's performance scales with increasing input sizes.
@@ -40,7 +41,7 @@ In essence, we're interested in understanding how the algorithm's performance ch
 ## Real Life Algorithmic Examples
 
 It can be helpful to de-abstract the thought process by using real world examples of algorithms which exhibit specific complexity classes.
-Big-O or asymptotic analysis relates the execution time to complete a process and its relationship to input size.
+Asymptotic analysis relates the execution time to complete a process and its relationship to input size.
 
 Input size is denoted by n.
 
