@@ -35,10 +35,20 @@ In essence, we're interested in understanding how the algorithm's performance ch
 
 ## Assumptions and Required Understanding
 
-* We use `Big-O` notation to express the complexity of an algorithm as it relates to the size of the input.
+* We use `Big-O` notation to express the complexity of an algorithm as it relates to the size of the input to that algorithm.
+* When referring to all complexity classes in big-o notation, I use the generic `O(Any)`.
 * `O(Any)` are referred to as complexity classes.
 * `n` denotes the number of elements in list.  In some cases where more than one input list exists `m` is used.
 * Asymptotic analysis is concerned with the dominant term.  If your analysis reveals `2n^2` number of operations, then `n^2` dominates `2n`, so the 2 is dropped to give us `O(n^2)`.
+* Some things will be described as `amortized O(Any)`.  This means it is `usually` `O(Any)`.  You might get a bit worse than `O(Any)`, but on average you will get `O(Any)`.  This usally triggers me to find a way to go from the amoritized version to the pure version.
+    * One example of this is python looping and appending to a list.  This is worse the direct assignment which does not require and resizing of the list.
+
+## Shortcuts and Heuristics
+
+* If we start with an n and recursively decrease `n`, think `O(log n)`.
+* If we do a set of things for every element of `n`, think `O(n)`.
+* If we nest loops first think, is there a better way to do this, then think polynomial time, `O(n^k)`.
+* If the thing seems completely unrelated to input size, think `O(1)`.
 
 ## Real Life Algorithmic Examples
 
@@ -61,7 +71,7 @@ These examples highlight the fundamental characteristic of constant time operati
 Linear complexity class scales upward linearly as you increase the input.
 If the input of `n=10` takes 5 minutes, the an input of `n=20` will take 10 minutes.
 
-For example, if i give you 5 dice, ask you to roll them and then tell me the sum, you would:
+For example, if i give you 5 dice, ask you to roll them and give me the sum, you would:
 
 ```pseudo code
 op_count    operation
@@ -83,7 +93,7 @@ If 5 dice takes 1 minute, you can predict that 10 dice will take 2 minutes.
 
 ### Example 3 - Common Log N example `O(log n)`
 
-Finding a Word in a Dictionary: When searching for a word in a physical dictionary, you typically start with a rough estimate of where the word might be located based on its initial letter. 
+Finding a Word in a Dictionary: When searching for a word in a physical dictionary, you typically start with a rough estimate of where the word might be located based on its initial letter.
 You then divide the search space in half with each page turn, narrowing down the possible location of the word.
 This process closely resembles a binary search algorithm, which has a complexity class of `O(log n)`.
 
