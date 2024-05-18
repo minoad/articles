@@ -35,13 +35,7 @@ By focusing on these higher-order factors, we can gain insights into how the alg
 
 In essence, we're interested in understanding how the algorithm's performance changes as we scale up the input size, not fixating on individual constants or minor differences between dataset sizes.
 
-
-
-
-
-
-
-## Common Big-O Notations
+## Real Life Algorithmic Examples
 
 Big-O or asymptotic analysis relates the execution time to complete a process and its relationship to input size.
 
@@ -80,9 +74,10 @@ Constant time examples are straightforward because they operate in the same amou
 
 These examples highlight the fundamental characteristic of constant time operations: their **efficiency is independent of the size or complexity of the input**.
 
-## Overview
+## Common Complexity Classes
 
-I've listed several common O() notations below, along with indicators and examples. Additionally, I've included the expected O() complexities for various common Python operations.
+I use this section as my personal quick reference.
+I've listed several common Complexity Classes below, along with indicators and examples. Additionally, I've included the expected classes for various common Python operations.
 
 Some caveats and mistakes i find myself making.
 
