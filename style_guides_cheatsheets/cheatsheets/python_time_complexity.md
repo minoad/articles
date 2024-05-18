@@ -39,22 +39,7 @@ In essence, we're interested in understanding how the algorithm's performance ch
 
 
 
-## Profile to validate your assumptions in python
 
-* `import cProfile; cProfile.run('function_to_test()', sort="ncalls")`
-* `python -m cProfile -s ncalls .\program_to_validate.py`
-
-Depending on how you run this, it will give you function call counts and processor time.
-
-At the bottom of this file is some python code to experiment with call counts.
-
-Sorting:
-
-* `tottime` is the time that specific function is doing something.  
-* `cumtime` is the cumulative time and includes the time the function is called, plus the time of all of the functions it calls.  
-* `ncalls` as an integer, the number of times the function is called.
-
-If you have a function, and you believe it runs in `O(n)`: then `import cProfile; cProfile.run('function_to_test()', sort="ncalls")` should be equal to `function_to_test(x) = len(x)`.
 
 ## Common Big-O Notations
 
@@ -397,7 +382,24 @@ Some caveats and mistakes i find myself making.
 
 These complexities assume average-case scenarios for most operations, and some operations (especially in dictionaries and sets) can degrade to worse cases under certain conditions, such as poor hash functions leading to many collisions. However, in general, these are the complexities you will encounter in typical use cases.
 
-### Python Call Counts Code
+## Profiling
+
+* `import cProfile; cProfile.run('function_to_test()', sort="ncalls")`
+* `python -m cProfile -s ncalls .\program_to_validate.py`
+
+Depending on how you run this, it will give you function call counts and processor time.
+
+At the bottom of this file is some python code to experiment with call counts.
+
+Sorting:
+
+* `tottime` is the time that specific function is doing something.  
+* `cumtime` is the cumulative time and includes the time the function is called, plus the time of all of the functions it calls.  
+* `ncalls` as an integer, the number of times the function is called.
+
+If you have a function, and you believe it runs in `O(n)`: then `import cProfile; cProfile.run('function_to_test()', sort="ncalls")` should be equal to `function_to_test(x) = len(x)`.
+
+## Python Call Counts Code
 
 ```python
 """
