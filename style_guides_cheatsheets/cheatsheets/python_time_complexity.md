@@ -151,7 +151,7 @@ log(n)      While not word_found:
 
 ### Linear Time: `O(n)`
 
-![](../../figures/constant_time.png)
+<img src="../../figures/constant_time.png" width=350 alt="constant time plot"></img>
 
 * The execution time grows linearly with the size of the input.
 * Examples:
