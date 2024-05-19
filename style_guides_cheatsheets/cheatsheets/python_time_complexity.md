@@ -151,7 +151,7 @@ log(n)      While not word_found:
 
 ### Linear Time: `O(n)`
 
-<img src="../../figures/constant_time.png" width=350 alt="constant time plot"></img>
+<img src="../../figures/linear_time.png" width=350 alt="Linear time plot"></img>
 
 * The execution time grows linearly with the size of the input.
 * Examples:
@@ -164,17 +164,7 @@ log(n)      While not word_found:
 
 ### Constant Time: `O(1)`
 
-```plot
- y=Execution Time
- ^
- |*****
- |
- |
- |
- |
- *-------------
-        x=Input Size
-```
+<img src="../../figures/constant_time.png" width=350 alt="constant time plot"></img>
 
 * The execution time is constant and does not change with the size of the input.
 * Examples:
@@ -186,17 +176,7 @@ log(n)      While not word_found:
 
 ### Logarithmic Time: `O(log n)`
 
-```plot
- y=Execution Time
- ^
- |*
- | *
- |  *
- |   *
- |    *
- *-------------
-        x=Input Size
-```
+<img src="../../figures/logarithmic_time.png" width=350 alt="Logarithmic time plot"></img>
 
 * The execution time grows logarithmically as the input size increases.
 * As the size of the input increases, the time taken by the algorithm to execute grows at a rate that is logarithmic in proportion to the size of the input.
@@ -209,19 +189,7 @@ log(n)      While not word_found:
 
 ### Linearithmic Time: `O(n log n)`
 
-```plot
- y=Execution Time
- ^
- |         *
- |        *
- |       *
- |      *
- |    *
- |  *
- |*
- *-------------
-        x=Input Size
-```
+<img src="../../figures/linearithmic_time.png" width=350 alt="Linearithmic time plot"></img>
 
 * I commonly hear this called `Linear Log` or `Log Linear`.
 * Similar to `Logarithmic Time: O(log n)` but includes a linear component.  Often this component comes from a merging at the end of each logarithmic section.
@@ -234,19 +202,7 @@ log(n)      While not word_found:
 
 ### Quadratic Time: `O(n^2)`
 
-```plot
- y=Execution Time
- ^
- |            *
- |          *
- |        *
- |      *
- |    *
- |  *
- |*
- *-------------
-        x=Input Size
-```
+<img src="../../figures/quadratic_time.png" width=350 alt="Quadratic time plot"></img>
 
 * The execution time grows quadratically with the size of the input.
 * The execution time rises as a sharp curve.
@@ -260,17 +216,7 @@ log(n)      While not word_found:
 
 ### Cubic Time: `O(n^3)`
 
-```plot
- y=Execution Time
- ^
- |                *
- |           *
- |       *
- |   *
- |*
- *------------------
-        x=Input Size
-```
+<img src="../../figures/cubic_time.png" width=350 alt="Cubic time plot"></img>
 
 * The execution time grows cubically with the size of the input.
 * Examples:
@@ -279,17 +225,7 @@ log(n)      While not word_found:
 
 ### Polynomial Time: `O(n^k)`
 
-```plot
- y=Execution Time
- ^
- |                *
- |           *
- |       *
- |   *
- |*
- *------------------
-        x=Input Size
-```
+<img src="../../figures/polynomial_time.png" width=350 alt="Polynomial time plot"></img>
 
 * The execution time grows polynomial with the size of the input, where `k` is a constant.
 * Examples:
@@ -297,18 +233,7 @@ log(n)      While not word_found:
 
 ### Exponential Time: `O(2^n)`
 
-```plot
- y=Execution Time
- ^
- |                *
- |             *
- |          *
- |       *
- |    *
- | *
- *------------------
-        x=Input Size
-```
+<img src="../../figures/exponential_time.png" width=350 alt="Exponential time plot"></img>
 
 * The execution time grows exponentially with the size of the input.
 * Examples:
@@ -317,18 +242,7 @@ log(n)      While not word_found:
 
 ### Factorial Time: `O(n!)`
 
-```plot
- y=Execution Time
- ^
- |                          *
- |                    *
- |               *
- |          *
- |     *
- | *
- *------------------
-        x=Input Size
-```
+<img src="../../figures/factorial_time.png" width=350 alt="Factorial time plot"></img>
 
 * The execution time grows factorial with the size of the input.
 * Examples:
@@ -337,19 +251,7 @@ log(n)      While not word_found:
 
 ### Sublinear Time: `O(√n)`
 
-```plot
- y=Execution Time
- ^
- |  *
- |
- |   *
- |     *
- |       *
- |          *
- |               *
- *------------------
-        x=Input Size
-```
+<img src="../../figures/sublinear_time.png" width=350 alt="Sublinear time plot"></img>
 
 * The execution time grows sublinearly with the size of the input.
 * Examples:
