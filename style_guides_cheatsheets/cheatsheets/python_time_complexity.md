@@ -5,16 +5,16 @@
 1. [Introduction](#introduction)
 2. [Assumptions and Required Understanding](#assumptions-and-required-understanding)
 3. [Common Complexity Classes](#common-complexity-classes)
-    1. [Constant Time: O(1)](#constant)
-    2. [Logarithmic Time: O(log n)](#logarithmic)
-    3. [Sublinear Time: O(√n)](#sublinear)
-    4. [Linearithmic Time: O(n log n)](#linearithmic)
-    5. [Linear Time: O(n)](#linear)
-    6. [Polynomial Time: O(n^k)](#polynomial)
-    7. [Quadratic Time: O(n^2)](#quadratic)
-    8. [Cubic Time: O(n^3)](#cubic)
-    9. [Exponential Time: O(2^n)](#exponential)
-    10. [Factorial Time: O(n!)](#factorial)
+    1. [Constant Time](#constant-time)
+    2. [Logarithmic Time](#logarithmic-time)
+    3. [Sublinear Time](#sublinear-time)
+    4. [Linearithmic Time](#linearithmic-time)
+    5. [Linear Time](#linear-time)
+    6. [Polynomial Time](#polynomial-time)
+    7. [Quadratic Time](#quadratic-time)
+    8. [Cubic Time](#cubic-time)
+    9. [Exponential Time](#exponential-time)
+    10. [Factorial Time](#factorial-time)
 4. [Python Operations Time Complexity](#python-operations-time-complexity)
 5. [Python Code](#python-code)
     1. [Profiling](#profiling)
@@ -169,7 +169,9 @@ log(n)      While not word_found:
 
 ## Common Complexity Classes
 
-### Constant Time: 'O(1)' {#constant}
+### Constant Time
+
+`O(1)`
 
 <img src="../../figures/constant_time.png" width=350 alt="constant time plot"></img>
 
@@ -181,7 +183,9 @@ log(n)      While not word_found:
     * Note that a commonly used alternative `m = []; [m.append(i) for i in a_list]` is `O(n)` and much slower.
   * Numpy array. `import numpy as np; l = np.zeros(len(data))`
 
-### Logarithmic Time: `O(log n)` {#logarithmic}
+### Logarithmic Time
+
+`O(log n)`
 
 <img src="../../figures/logarithmic_time.png" width=350 alt="Logarithmic time plot"></img>
 
@@ -194,7 +198,9 @@ log(n)      While not word_found:
   * Binary search on a sorted array
   * Inserting, deleting, or searching in a balanced binary search tree (e.g., AVL tree, Red-Black tree)
 
-### Sublinear Time: `O(√n)` {#sublinear}
+### Sublinear Time
+
+`O(√n)`
 
 <img src="../../figures/sublinear_time.png" width=350 alt="Sublinear time plot"></img>
 
@@ -203,7 +209,9 @@ log(n)      While not word_found:
   * Certain algorithms on square matrices
   * Jump search algorithm for sorted arrays
 
-### Linearithmic Time: `O(n log n)` {#linearithmic}
+### Linearithmic Time
+
+`O(n log n)`
 
 <img src="../../figures/linearithmic_time.png" width=350 alt="Linearithmic time plot"></img>
 
@@ -216,7 +224,9 @@ log(n)      While not word_found:
   * Efficient sorting algorithms: Merge sort, Heapsort, and Timsort
   * Some divide-and-conquer algorithms
 
-### Linear Time: `O(n)` {#linear}
+### Linear Time
+
+`O(n)`
 
 <img src="../../figures/linear_time.png" width=350 alt="Linear time plot"></img>
 
@@ -229,7 +239,9 @@ log(n)      While not word_found:
   * Pre-creating a list then assigning to it.  `l = [0] * len(data); for i, dat in enumerate(data): l[i] = dat`
     * Likewise this is a red flag.  Look to use a direct assignment if possible.
 
-### Polynomial Time: `O(n^k)` {#polynomial}
+### Polynomial Time
+
+`O(n^k)`
 
 <img src="../../figures/polynomial_time.png" width=350 alt="Polynomial time plot"></img>
 
@@ -237,7 +249,9 @@ log(n)      While not word_found:
 * Examples:
   * Algorithms with nested loops (more than three levels)
 
-### Quadratic Time: `O(n^2)` {#quadratic}
+### Quadratic Time
+
+`O(n^2)`
 
 <img src="../../figures/quadratic_time.png" width=350 alt="Quadratic time plot"></img>
 
@@ -251,7 +265,9 @@ log(n)      While not word_found:
   * Simple sorting algorithms: Bubble sort, Insertion sort, and Selection sort (in their worst cases)
   * Checking all pairs in a list (e.g., for finding duplicates)
 
-### Cubic Time: `O(n^3)` {#cubic}
+### Cubic Time
+
+`O(n^3)`
 
 <img src="../../figures/cubic_time.png" width=350 alt="Cubic time plot"></img>
 
@@ -260,7 +276,9 @@ log(n)      While not word_found:
   * Algorithms with three nested loops over the input data
   * Certain dynamic programming algorithms (e.g., Floyd-Warshall algorithm for all-pairs shortest paths)
 
-### Exponential Time: `O(2^n)` {#exponential}
+### Exponential Time
+
+`O(2^n)`
 
 <img src="../../figures/exponential_time.png" width=350 alt="Exponential time plot"></img>
 
@@ -269,7 +287,9 @@ log(n)      While not word_found:
   * Recursive algorithms that solve a problem of size `n` by recursively solving two smaller problems of size `n-1`
   * Brute-force algorithms for the traveling salesman problem
 
-### Factorial Time: `O(n!)` {#factorial}
+### Factorial Time
+
+`O(n!)`
 
 <img src="../../figures/factorial_time.png" width=350 alt="Factorial time plot"></img>
 
