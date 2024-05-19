@@ -151,17 +151,7 @@ log(n)      While not word_found:
 
 ### Linear Time: `O(n)`
 
-```md
- y=Execution Time
- ^
- |    *
- |   * 
- |  *  
- | *   
- |*    
- *-------------
-        x=Input Size
-```
+![](../../figures/constant_time.png)
 
 * The execution time grows linearly with the size of the input.
 * Examples:
