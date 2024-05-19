@@ -53,6 +53,8 @@ In essence, we're interested in understanding how the algorithm's performance ch
 * Some things will be described as `amortized O(Any)`.  This means it is `usually` `O(Any)`.  You might get a bit worse than `O(Any)`, but on average you will get `O(Any)`.  This usally triggers me to find a way to go from the amortized version to the pure version.
     * One example of this is python looping and appending to a list.  This is worse the direct assignment which does not require and resizing of the list.
 
+![](../../figures/complexity_class_compared.png)
+
 ## Shortcuts and Heuristics
 
 * If we start with an n and recursively decrease `n`, think `O(log n)`.
