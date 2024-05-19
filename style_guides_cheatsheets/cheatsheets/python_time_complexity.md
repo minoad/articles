@@ -55,12 +55,18 @@ In essence, we're interested in understanding how the algorithm's performance ch
 
 ![](../../figures/complexity_class_compared.png)
 
-## Shortcuts and Heuristics
+## Shortcuts, Heuristics & Gotchas
 
 * If we start with an n and recursively decrease `n`, think `O(log n)`.
 * If we do a set of things for every element of `n`, think `O(n)`.
 * If we nest loops first think, is there a better way to do this, then think polynomial time, `O(n^k)`.
 * If the thing seems completely unrelated to input size, think `O(1)`.
+* Linear Time `O(n)` vs `O(m + n)`
+    * Watch for accidentally dropping an `m` factor.  I have made this mistake a few times.  When looping over multiple lists, make sure you dont inadvertently drop one of the dominant terms.
+* Logarithmic Time `O(log n)` vs Linearithmic Time `O(n log n)`
+    * When I have an algorithm that continually cuts its input size by some factor (like Binary search on a sorted array), I think `O(log n)`.
+    * If we do something with each of those iteration like a merge, dont forget to add the additional `n` term for `O(n log n)`.
+    * Its common to hear Linearithmic Time `O(n log n)` referred to as `Log Linear` or `Linear Log`.
 
 ## Real Life Algorithmic Examples
 
@@ -142,17 +148,6 @@ log(n)      While not word_found:
 ```
 
 ## Common Complexity Classes
-
-I use this section as my personal quick reference.
-I've listed several common Complexity Classes below, along with indicators and examples. Additionally, I've included the expected classes for various common Python operations.
-
-Some caveats and mistakes i find myself making.
-
-* **Linear Time** `O(n)` vs `O(m + n)`
-    * Watch for accidentally dropping an `m` factor.  I have made this mistake a few times.  When looping over multiple lists, make sure you dont inadvertently drop on of the dominant terms.
-* **Logarithmic Time** `O(log n)` vs **Linearithmic Time** `O(n log n)`
-    * When I have an algorithm that continually cuts its input size by some factor (like Binary search on a sorted array), I think `O(log n)`.  If those results are then operated on (like a merge sort), dont forget to add the additional `n` term for `O(n log n)`.
-    * Its common to hear Linearithmic Time `O(n log n)` referred to as `Log Linear` or `Linear Log`.
 
 ### Linear Time: `O(n)`
 
