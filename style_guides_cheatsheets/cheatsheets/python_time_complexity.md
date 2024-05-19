@@ -1,5 +1,26 @@
 # Python Asymptotic Analysis
 
+## Table of Contents
+
+1. [Introduction](#introduction)
+2. [Assumptions and Required Understanding](#assumptions-and-required-understanding)
+3. [Common Complexity Classes](#common-complexity-classes)
+    1. [Constant Time: O(1)](#constant-time-o-1)
+    2. [Logarithmic Time: O(log n)](#logarithmic-time-o-log-n)
+    3. [Sublinear Time: O(√n)](#sublinear-time-o-√n)
+    4. [Linearithmic Time: O(n log n)](#linearithmic-time-o-n-log-n)
+    5. [Linear Time: O(n)](#linear-time-o-n)
+    6. [Polynomial Time: O(n^k)](#polynomial-time-o-n^k)
+    7. [Quadratic Time: O(n^2)](#quadratic-time-o-n^2)
+    8. [Cubic Time: O(n^3)](#cubic-time-o-n^3)
+    9. [Exponential Time: O(2^n)](#exponential-time-o-2^n)
+    10. [Factorial Time: O(n!)](#factorial-time-o-n)
+4. [Python Operations Time Complexity](#python-operations-time-complexity)
+5. [Python Code](#python-code)
+    1. [Profiling](#profiling)
+    2. [Python Call Counts Code](#python-call-counts-code)
+    3. [Complexity Plots](#complexity-plots)
+
 ## Introduction
 
 Welcome to the wonderful world of Asymptotic Analysis of Algorithms!
@@ -51,7 +72,7 @@ In essence, we're interested in understanding how the algorithm's performance ch
 * `n` denotes the number of elements in list.  In some cases where more than one input list exists `m` is used.
 * Asymptotic analysis is concerned with the dominant term.  If your analysis reveals `2n^2` number of operations, then `n^2` dominates `2n`, so the 2 is dropped to give us `O(n^2)`.
 * Some things will be described as `amortized O(Any)`.  This means it is `usually` `O(Any)`.  You might get a bit worse than `O(Any)`, but on average you will get `O(Any)`.  This usally triggers me to find a way to go from the amortized version to the pure version.
-    * One example of this is python looping and appending to a list.  This is worse the direct assignment which does not require and resizing of the list.
+  * One example of this is python looping and appending to a list.  This is worse the direct assignment which does not require and resizing of the list.
 
 ![](../../figures/complexity_class_compared.png)
 
@@ -62,11 +83,11 @@ In essence, we're interested in understanding how the algorithm's performance ch
 * If we nest loops first think, is there a better way to do this, then think polynomial time, `O(n^k)`.
 * If the thing seems completely unrelated to input size, think `O(1)`.
 * Linear Time `O(n)` vs `O(m + n)`
-    * Watch for accidentally dropping an `m` factor.  I have made this mistake a few times.  When looping over multiple lists, make sure you dont inadvertently drop one of the dominant terms.
+  * Watch for accidentally dropping an `m` factor.  I have made this mistake a few times.  When looping over multiple lists, make sure you dont inadvertently drop one of the dominant terms.
 * Logarithmic Time `O(log n)` vs Linearithmic Time `O(n log n)`
-    * When I have an algorithm that continually cuts its input size by some factor (like Binary search on a sorted array), I think `O(log n)`.
-    * If we do something with each of those iteration like a merge, dont forget to add the additional `n` term for `O(n log n)`.
-    * Its common to hear Linearithmic Time `O(n log n)` referred to as `Log Linear` or `Linear Log`.
+  * When I have an algorithm that continually cuts its input size by some factor (like Binary search on a sorted array), I think `O(log n)`.
+  * If we do something with each of those iteration like a merge, dont forget to add the additional `n` term for `O(n log n)`.
+  * Its common to hear Linearithmic Time `O(n log n)` referred to as `Log Linear` or `Linear Log`.
 
 ## Real Life Algorithmic Examples
 
@@ -108,7 +129,6 @@ The constant factors and lower-order terms are dropped, so the algorithm is clas
 This means the execution time grows linearly with the number of dice.
 If 5 dice takes 1 minute, you can predict that 10 dice will take 2 minutes.
 
-
 ### Example 3 - Common Log N example `O(log n)`
 
 Finding a Word in a Dictionary: When searching for a word in a physical dictionary, you typically start with a rough estimate of where the word might be located based on its initial letter.
@@ -129,7 +149,7 @@ Some comments on this complexity class.
 
 * While letters in the alphabet have no individual value (`is n greater than o` makes no sense) for the purposes of string analysis, the alphabet order is used to determine value `a=1, ..., z=26`.
 * We see our first shortcut here.  The size of the dictionary in constantly decreasing.  The amount of decrease is not important.
-    * If we always start at the middle page rather than an estimated position, and we cut exactly in half the complexity class will always be `O(log n)`
+  * If we always start at the middle page rather than an estimated position, and we cut exactly in half the complexity class will always be `O(log n)`
 * Lets assume your dictionary contains 1000 pages.  Every once in a while, you will open up to exactly the right page.  This would be a single operation `O(1)`.  But asymptotic analysis deals in averages.
 * Worst case is the number of times you split either left or right until you run out of pages.  On a dictionary of 1000 pages, if your word does exist, and you select correctly every time, it will take 10 operations, `base_2_log(1000)` $\( \log_2(1000) \)$.
 
@@ -148,19 +168,6 @@ log(n)      While not word_found:
 ```
 
 ## Common Complexity Classes
-
-### Linear Time: `O(n)`
-
-<img src="../../figures/linear_time.png" width=350 alt="Linear time plot"></img>
-
-* The execution time grows linearly with the size of the input.
-* Examples:
-  * Iterating through a list: `for x in list`
-  * Finding the maximum or minimum value in an unsorted list
-  * Appending to a list based on a list comprehension.  `m = []; [m.append(i) for i in a_list]`
-    * `list.append()` is a common red flag that should trigger an analysis for direct assignment.
-  * Pre-creating a list then assigning to it.  `l = [0] * len(data); for i, dat in enumerate(data): l[i] = dat`
-    * Likewise this is a red flag.  Look to use a direct assignment if possible.
 
 ### Constant Time: `O(1)`
 
@@ -187,6 +194,15 @@ log(n)      While not word_found:
   * Binary search on a sorted array
   * Inserting, deleting, or searching in a balanced binary search tree (e.g., AVL tree, Red-Black tree)
 
+### Sublinear Time: `O(√n)`
+
+<img src="../../figures/sublinear_time.png" width=350 alt="Sublinear time plot"></img>
+
+* The execution time grows sublinearly with the size of the input.
+* Examples:
+  * Certain algorithms on square matrices
+  * Jump search algorithm for sorted arrays
+
 ### Linearithmic Time: `O(n log n)`
 
 <img src="../../figures/linearithmic_time.png" width=350 alt="Linearithmic time plot"></img>
@@ -199,6 +215,27 @@ log(n)      While not word_found:
 * Examples:
   * Efficient sorting algorithms: Merge sort, Heapsort, and Timsort
   * Some divide-and-conquer algorithms
+
+### Linear Time: `O(n)`
+
+<img src="../../figures/linear_time.png" width=350 alt="Linear time plot"></img>
+
+* The execution time grows linearly with the size of the input.
+* Examples:
+  * Iterating through a list: `for x in list`
+  * Finding the maximum or minimum value in an unsorted list
+  * Appending to a list based on a list comprehension.  `m = []; [m.append(i) for i in a_list]`
+    * `list.append()` is a common red flag that should trigger an analysis for direct assignment.
+  * Pre-creating a list then assigning to it.  `l = [0] * len(data); for i, dat in enumerate(data): l[i] = dat`
+    * Likewise this is a red flag.  Look to use a direct assignment if possible.
+
+### Polynomial Time: `O(n^k)`
+
+<img src="../../figures/polynomial_time.png" width=350 alt="Polynomial time plot"></img>
+
+* The execution time grows polynomial with the size of the input, where `k` is a constant.
+* Examples:
+  * Algorithms with nested loops (more than three levels)
 
 ### Quadratic Time: `O(n^2)`
 
@@ -223,14 +260,6 @@ log(n)      While not word_found:
   * Algorithms with three nested loops over the input data
   * Certain dynamic programming algorithms (e.g., Floyd-Warshall algorithm for all-pairs shortest paths)
 
-### Polynomial Time: `O(n^k)`
-
-<img src="../../figures/polynomial_time.png" width=350 alt="Polynomial time plot"></img>
-
-* The execution time grows polynomial with the size of the input, where `k` is a constant.
-* Examples:
-  * Algorithms with nested loops (more than three levels)
-
 ### Exponential Time: `O(2^n)`
 
 <img src="../../figures/exponential_time.png" width=350 alt="Exponential time plot"></img>
@@ -248,15 +277,6 @@ log(n)      While not word_found:
 * Examples:
   * Generating all permutations of a set
   * Certain brute-force algorithms for combinatorial problems
-
-### Sublinear Time: `O(√n)`
-
-<img src="../../figures/sublinear_time.png" width=350 alt="Sublinear time plot"></img>
-
-* The execution time grows sublinearly with the size of the input.
-* Examples:
-  * Certain algorithms on square matrices
-  * Jump search algorithm for sorted arrays
 
 ## Python Operations Time Complexity
 
