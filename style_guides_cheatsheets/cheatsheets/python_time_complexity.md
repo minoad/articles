@@ -26,15 +26,16 @@
 Welcome to the wonderful world of Asymptotic Analysis of Algorithms!
 
 Here we will attempt to explain and understand the efficiency of algorithms relative to the size of the input.
-This allows us to make informed decisions when writing code, implementing infrastructure and sometime even daily activity.
+This allows us to make informed decisions when writing code, implementing infrastructure and sometimes even daily activity.
 
 Asymptotic Analysis is a powerful tool for quantifying the performance characteristics of algorithms.
-Whether you're a seasoned developer looking to deepen your understanding of algorithmic complexity or a newcomer eager to explore the fundamentals, this guide has something for everyone.
+Whether you're a seasoned developer looking to deepen your understanding of algorithmic complexity or a newcomer eager to explore the fundamentals, this guide has something for you.
 I am also writing this to function as a quick reference guide.  Included in each `Complexity Class` are examples and shortcuts to indicate them.
+There is also a `Heuristics` section which contains notes for quickly determining a `Complexity Class`.
 
 Additionally, we'll learn how to validate our assumptions about algorithmic complexity using Python's profiling tools, equipping us with the means to measure and analyze the performance of our code empirically.
 
-So, whether you're embarking on a journey to optimize your code for maximum efficiency or simply seeking to deepen your understanding of algorithmic principles, join us as we unravel the mysteries of Asymptotic Analysis.
+So, whether you're embarking on a journey to optimize your code for maximum efficiency or simply seeking to deepen your understanding of algorithmic principles, join in as we unravel the mysteries of Asymptotic Analysis.
 
 Let's dive in! 🚀
 
@@ -48,16 +49,19 @@ Many of the issues we faced stemmed from decisions made during the initial devel
 In those early days, the team hadn't anticipated the exponential growth of their data.
 As a result, the architecture and algorithms they chose struggled to handle the increased scale efficiently.
 
-When analyzing algorithmic efficiency, we're often more concerned with the relative sizes of input datasets rather than their absolute values. For instance, if dataset `n1` has 10 more elements than dataset `n2`, this minor discrepancy doesn't significantly affect our assessment. What matters more are the higher-order factors that determine how the algorithm's performance scales with increasing input sizes.
+When analyzing algorithmic efficiency, we're more concerned with the relative sizes of input datasets rather than their absolute values. For instance, if dataset `n1` has 10 more elements than dataset `n2`, this minor discrepancy doesn't significantly affect our assessment. What matters are the higher-order factors that determine how the algorithm's performance scales with increasing input sizes.
 
-By focusing on these higher-order factors, we can gain insights into how the algorithm will perform as the input size grows to much larger scales. This approach allows us to make more generalized statements about an algorithm's efficiency, independent of specific input sizes.
+By focusing on these higher-order factors, we can gain insights into how the algorithm will perform as the input size grows to much larger scales.
+This approach allows us to make more generalized statements about an algorithm's efficiency, independent of specific input sizes.
 
 In essence, we're interested in understanding how the algorithm's performance changes as we scale up the input size, not fixating on individual constants or minor differences between dataset sizes.
 
 ## Assumptions and Required Understanding
 
-* We use `Big-O` notation to express the complexity of an algorithm as it relates to the size of the input to that algorithm.
-* These are called `Complexity Classes`.  The distinct complexity classes I'm working with are: (ordered by average complexity)
+* We use `Big-O` notation to express the complexity of an algorithm.
+* Complexity is the relationship between number of operations per input size.
+* `Complexity Classes` are common complexities defined by the mathematical function that most closely matches the relationship.
+* The distinct complexity classes I'm working with are: (ordered by average complexity)
     1. Constant Time: `O(1)`
     2. Logarithmic Time: `O(log n)`
     3. Sublinear Time: `O(√n)`
